@@ -13,7 +13,7 @@ const Users = () => {
     if (number === 0)
       return (
         <h2>
-          <span class="badge bg-danger">Никто с тобой не тусанет</span>
+          <span className="badge bg-danger">Никто с тобой не тусанет</span>
         </h2>
       );
 
