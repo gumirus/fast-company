@@ -79,8 +79,7 @@ const Users = () => {
               <button
                 type="button"
                 className="btn btn-danger"
-                onClick={() => handleDelete(user._id)}
-              >
+                onClick={() => handleDelete(user._id)}>
                 delete
               </button>
             </td>
