@@ -1,5 +1,5 @@
 import * as users from "./fake.api/user.api";
-const api = {
+const API = {
   users,
 };
-export default api;
+export default API;
