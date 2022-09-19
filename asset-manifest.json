@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/fast-company1/static/css/main.50441a06.css",
-    "main.js": "/fast-company1/static/js/main.8fd4452c.js",
-    "static/js/787.1bf95257.chunk.js": "/fast-company1/static/js/787.1bf95257.chunk.js",
-    "index.html": "/fast-company1/index.html",
-    "main.50441a06.css.map": "/fast-company1/static/css/main.50441a06.css.map",
-    "main.8fd4452c.js.map": "/fast-company1/static/js/main.8fd4452c.js.map",
-    "787.1bf95257.chunk.js.map": "/fast-company1/static/js/787.1bf95257.chunk.js.map"
+    "main.css": "/fast-company/static/css/main.28cb4b2c.css",
+    "main.js": "/fast-company/static/js/main.5d6ca4a1.js",
+    "static/js/787.4d212c3f.chunk.js": "/fast-company/static/js/787.4d212c3f.chunk.js",
+    "index.html": "/fast-company/index.html",
+    "main.28cb4b2c.css.map": "/fast-company/static/css/main.28cb4b2c.css.map",
+    "main.5d6ca4a1.js.map": "/fast-company/static/js/main.5d6ca4a1.js.map",
+    "787.4d212c3f.chunk.js.map": "/fast-company/static/js/787.4d212c3f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.50441a06.css",
-    "static/js/main.8fd4452c.js"
+    "static/css/main.28cb4b2c.css",
+    "static/js/main.5d6ca4a1.js"
   ]
 }
