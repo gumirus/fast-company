@@ -18,7 +18,7 @@ const Users = ({ users, ...rest }) => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <User key={user._id} {...user} {...rest} />
+            <User {...user} {...rest} />
           ))}
         </tbody>
       </table>
