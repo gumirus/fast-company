@@ -1,34 +1,46 @@
 import React from "react";
 
-const SearchStatus = ({ number }) => {
-  const textColor = () => {
-    if (number) {
-      return "fs-5 badge bg-primary m-2";
-    } else return "fs-5 badge bg-danger m-2";
+const SearchStatus = ({ length }) => {
+  const formatClass = () => {
+    const classes = "badge ";
+    return length !== 0 ? classes + "bg-primary" : classes + "bg-danger";
   };
 
-  const renderPharse = (number) => {
-    if (number) {
-      return ["2", "3", "4"].some((item) => {
-        return item === number.toString().slice(number.toString().length - 1);
-      }) &&
-        !["12", "13", "14"].some((item) => {
-          return (
-            item ==
-            number
-              .toString()
-              .slice(number.toString().length - 2, number.toString().length)
-          );
-        })
-        ? number + " человека тусанут с тобой сегодня"
-        : number + " человек тусанет с тобой сегодня";
-    } else return "Никто с тобой не тусанет";
+  const renderPhrase = (number) => {
+    if (number === 0) return "Никто с тобой не тусанет";
+
+    let subject = "";
+    let verb = "";
+
+    if (number > 20) {
+      switch (number) {
+        case number % 10 === 1:
+          subject = "человек";
+          verb = "тусанет";
+          break;
+        case number % 10 === 2 || number % 10 === 3 || number % 10 === 4:
+          subject = "человека";
+          verb = "тусанут";
+          break;
+        default:
+          break;
+      }
+    } else if ((5 <= number && number <= 20) || number === 1) {
+      subject = "человек";
+      verb = "тусанет";
+    } else {
+      subject = "человека";
+      verb = "тусанут";
+    }
+
+    let msg = `${String(number)} ${subject} ${verb} с тобой сегодня`;
+    return msg;
   };
 
   return (
-    <h2>
-      <span className={textColor()}>{renderPharse(number)}</span>
-    </h2>
+    <h3>
+      <span className={formatClass()}>{renderPhrase(length)}</span>
+    </h3>
   );
 };
 

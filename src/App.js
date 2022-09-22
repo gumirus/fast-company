@@ -2,31 +2,30 @@ import React, { useState } from "react";
 import Users from "./components/users";
 import SearchStatus from "./components/searchStatus";
 import api from "./api";
-import BookMark from "./components/bookmark";
 
 function App() {
   const [users, setUsers] = useState(api.users.fetchAll());
 
   const handleDelete = (userId) => {
-    setUsers((prevState) => prevState.filter((line) => line._id !== userId));
+    const newUsers = users.filter((user) => user._id !== userId);
+    setUsers(newUsers);
   };
 
-  const handleToggleMark = (userId) => {
-    const newUsers = users.map((item) => ({
-      ...item,
-      status: item._id === userId ? !item.status : item.status,
-    }));
+  const handleToggleBookMark = (userId) => {
+    const newUsers = users.map((user) => {
+      if (user._id === userId) user.bookmark = !user.bookmark;
+      return user;
+    });
     setUsers(newUsers);
   };
 
   return (
     <>
-      <SearchStatus number={users.length} />
+      <SearchStatus length={users.length} />
       <Users
-        key={users._id}
         users={users}
-        onItemDelete={handleDelete}
-        onShangeStatus={handleToggleMark}
+        onDelete={handleDelete}
+        onBookMark={handleToggleBookMark}
       />
     </>
   );

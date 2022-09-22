@@ -2,39 +2,32 @@ import React from "react";
 import User from "./user";
 
 const Users = ({ users, ...rest }) => {
-  const tableHeader = [
-    "Имя",
-    "Качества",
-    "Профессия",
-    "Встретился, раз",
-    "Оценка",
-    "Избранное",
-    "",
-  ];
-  return (
-    <table className="table table-responsive">
-      <thead className="table-light" hidden={users.length === 0}>
-        <tr>
-          {tableHeader.map((name) => (
-            <th scope="col" key={name}>
-              {name}
-            </th>
+  const renderTable = () => {
+    return users && users.length !== 0 ? (
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Качества</th>
+            <th scope="col">Профессия</th>
+            <th scope="col">Встретился, раз</th>
+            <th scope="col">Оценка</th>
+            <th scope="col">Избранное</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <User key={user._id} {...user} {...rest} />
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((item) => (
-          <User
-            status={false}
-            key={item._id}
-            {...item}
-            onDelete={rest.onItemDelete}
-            onChangeStatus={rest.onShangeStatus}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
+        </tbody>
+      </table>
+    ) : (
+      ""
+    );
+  };
+
+  return <>{renderTable()}</>;
 };
 
 export default Users;
