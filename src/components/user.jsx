@@ -19,7 +19,7 @@ const User = (props) => {
       <td>{name}</td>
       <td>
         {qualities.map((qualitie) => (
-          <Qualitie key={qualitie._id} {...qualitie} />
+          <Qualitie {...qualitie._id} {...qualitie} />
         ))}
       </td>
       <td>{profession.name}</td>
