@@ -4,7 +4,7 @@ const BookMark = ({ status }) => {
   const bookmark = "bi bi-bookmark";
   const bookMarkClass = status ? bookmark + "-check-fill" : bookmark;
   return (
-    <button type="button" class="btn btn-outline-dark">
+    <button type="button" className="btn btn-outline-dark">
       <i className={bookMarkClass}></i>
     </button>
   );

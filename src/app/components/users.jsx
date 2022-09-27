@@ -1,4 +1,3 @@
-import { noConflict } from "lodash";
 import React from "react";
 import { useState } from "react";
 import { paginate } from "../utils/paginate";
