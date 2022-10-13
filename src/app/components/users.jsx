@@ -23,6 +23,10 @@ const Users = ({ users: allUsers, ...rest }) => {
     setCurrentPage(pageIndex);
   };
 
+  const handleSort = (item) => {
+    console.log(item);
+  };
+  
   const handleProfessionSelect = (item) => {
     setSelectedProf(item);
   };
@@ -52,7 +56,9 @@ const Users = ({ users: allUsers, ...rest }) => {
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
-          {count > 0 && <UserTable users={usersGrop} {...rest} />}
+          {count > 0 && (
+            <UserTable users={usersGrop} onSort={handleSort} {...rest} />
+          )}
           <div className="d-flex justify-content-center">
             <Pagination
               itemsCount={count}
