@@ -33,7 +33,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     setSelectedProf(item);
   };
   const filteredUsers = selectedProf
-    ? allUsers.filter((user) => user.profession !== selectedProf)
+    ? allUsers.filter((user) => user.profession._id === selectedProf._id)
     : allUsers;
   const count = filteredUsers.length;
   const sortedUsers = _.orderBy(filteredUsers, [sortBy.iter], [sortBy.order]);
