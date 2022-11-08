@@ -25,7 +25,7 @@ const UserTable = ({ users, onSort, selectedSort, ...rest }) => {
   );
 };
 
-UserTable.PropTypes = {
+UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   onSort: PropTypes.func.isRequired,
   selectedSort: PropTypes.object.isRequired
