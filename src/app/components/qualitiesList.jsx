@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types"
-import Quality from "./quality"
+import PropTypes from "prop-types";
+import Quality from "./qualities";
 
 const QualitiesList = ({ qualities }) => {
   return (
@@ -12,8 +12,8 @@ const QualitiesList = ({ qualities }) => {
   );
 };
 
-QualitiesList.propTypes={
-    qualities:PropTypes.array
-}
- 
+QualitiesList.propTypes = {
+  qualities: PropTypes.array
+};
+
 export default QualitiesList;
