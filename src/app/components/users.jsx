@@ -8,12 +8,27 @@ import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
 
-const Users = ({ users: allUsers, ...rest }) => {
+const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [professions, setProfession] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
   const pageSize = 8;
+
+  const [users, setUsers] = useState(api.users.fetchAll());
+  const handleDelete = (userId) => {
+    const newUsers = users.filter((user) => user._id !== userId);
+    setUsers(newUsers);
+  };
+
+  const handleToggleBookMark = (userId) => {
+    const newUsers = users.map((user) => {
+      if (user._id === userId) user.bookmark = !user.bookmark;
+      return user;
+    });
+    setUsers(newUsers);
+  };
+
   useEffect(() => {
     api.professions.fetchAll().then((data) => setProfession(data));
   }, []);
@@ -33,8 +48,8 @@ const Users = ({ users: allUsers, ...rest }) => {
     setSelectedProf(item);
   };
   const filteredUsers = selectedProf
-    ? allUsers.filter((user) => user.profession._id === selectedProf._id)
-    : allUsers;
+    ? users.filter((user) => user.profession._id === selectedProf._id)
+    : users;
   const count = filteredUsers.length;
   const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
   const usersGrop = paginate(sortedUsers, currentPage, pageSize);
@@ -42,7 +57,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     setSelectedProf();
   };
   const renderTable = () => {
-    return allUsers && count !== 0 ? (
+    return users && count !== 0 ? (
       <div className="d-flex">
         {professions && (
           <div className="d-flex flex-column flex-shrink-0 p-3">
@@ -64,7 +79,8 @@ const Users = ({ users: allUsers, ...rest }) => {
               users={usersGrop}
               onSort={handleSort}
               selectedSort={sortBy}
-              {...rest}
+              onDelete={handleDelete}
+              onToggleBookMark={handleToggleBookMark}
             />
           )}
           <div className="d-flex justify-content-center">
