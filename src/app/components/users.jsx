@@ -36,7 +36,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     ? allUsers.filter((user) => user.profession._id === selectedProf._id)
     : allUsers;
   const count = filteredUsers.length;
-  const sortedUsers = _.orderBy(filteredUsers, [sortBy.iter], [sortBy.order]);
+  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
   const usersGrop = paginate(sortedUsers, currentPage, pageSize);
   const clearFilter = () => {
     setSelectedProf();
