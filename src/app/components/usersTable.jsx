@@ -19,7 +19,7 @@ const UsersTable = ({
       component: (user) => <QualitiesList qualities={user.qualities} />
     },
     professions: { path: "profession.name", name: "Профессия" },
-    comletedMeetings: { path: "comletedMeetings", name: "Встретился, раз" },
+    completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
     rate: { path: "rate", name: "Оценка" },
     bookmark: {
       path: "bookmark",
