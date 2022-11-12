@@ -8,7 +8,7 @@ const UserTable = ({
   users,
   onSort,
   selectedSort,
-  onBookMark,
+  onToggleBookMark,
   onDelete
 }) => {
   const columns = {
@@ -24,7 +24,7 @@ const UserTable = ({
       path: "bookmark",
       name: "Избранное",
       component: (user) => (
-        <div className="m-2" onClick={() => onBookMark(user._id)}>
+        <div className="m-2" onClick={() => onToggleBookMark(user._id)}>
           <BookMark status={user.bookmark} />
         </div>
       )
@@ -55,7 +55,7 @@ UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   onSort: PropTypes.func.isRequired,
   selectedSort: PropTypes.object.isRequired,
-  onBookMark: PropTypes.func.isRequired,
+  onToggleBookMark: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 };
 
