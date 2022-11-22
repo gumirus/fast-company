@@ -19,16 +19,16 @@ const Login = () => {
     },
     password: {
       isRequired: {
-        message: "Пароль обязательна для запонения"
+        message: "Пароль обязателен для заполнения"
       },
       isCapitalSymbol: {
-        message: "Пароль должен содержать хотя бы одну заглавную букву "
+        message: "Пароль должен содержать хотя бы одну заглавную букву"
       },
       isContainDigit: {
-        message: "Пароль должен содержать хотя бы однo число"
+        message: "Пароль должен содержать хотя бы одно число"
       },
       min: {
-        message: "Пароль должен составлять минимум из 8 символов",
+        message: "Пароль должен состоять минимум из 8 символов",
         value: 8
       }
     }
@@ -57,7 +57,7 @@ const Login = () => {
           <h3 className="mb-4">Login</h3>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="@mail почта"
+              label="Почта"
               placeholder="@mail :"
               name="email"
               value={data.email}
