@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Quality = ({ color, name }) => {
-  const classes = "btn m-1 btn-" + color;
-  return <li className={classes}>{name}</li>;
+  return <span className={"badge m-1 p-2 bg-" + color}>{name}</span>;
 };
 Quality.propTypes = {
   color: PropTypes.string.isRequired,

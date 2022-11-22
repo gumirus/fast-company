@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import api from "../api";
+import API from "../api";
 import QualitiesList from "./qualitiesList";
 import { useHistory } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const UserPage = ({ userId }) => {
   const history = useHistory();
   const [user, setUser] = useState();
   useEffect(() => {
-    api.users.getById(userId).then((data) => setUser(data));
+    API.users.getById(userId).then((data) => setUser(data));
   });
   const handleClick = () => {
     history.push("/users");
@@ -22,7 +22,9 @@ const UserPage = ({ userId }) => {
           <QualitiesList qualities={user.qualities} />
           <h5>Встретился , раз : {user.completedMeetings}</h5>
           <h2>Rate: {user.rate}</h2>
-          <button onClick={handleClick}> Все Пользователи</button>
+          <button className="btn btn-outline-secondary" onClick={handleClick}>
+            Все Пользователи
+          </button>
         </div>
       </div>
     );

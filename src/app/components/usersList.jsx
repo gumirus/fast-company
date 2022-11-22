@@ -72,8 +72,10 @@ const UsersList = () => {
                 items={professions}
                 onItemSelect={handleProfessionSelect}
               />
-              <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-                {" "}
+              <button
+                className="btn btn-outline-secondary mt-2"
+                onClick={clearFilter}
+              >
                 Очистить
               </button>
             </div>
