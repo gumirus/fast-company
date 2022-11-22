@@ -31,6 +31,7 @@ const UsersList = () => {
     });
     setUsers(newArray);
   };
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     API.professions.fetchAll().then((data) => setProfession(data));
@@ -40,6 +41,7 @@ const UsersList = () => {
   }, [selectedProf]);
 
   const handleProfessionSelect = (item) => {
+    if (searchQuery !== "") setSearchQuery("");
     setSelectedProf(item);
   };
 
@@ -48,6 +50,11 @@ const UsersList = () => {
   };
   const handleSort = (item) => {
     setSortBy(item);
+  };
+
+  const handleSearchQuery = ({ target }) => {
+    setSelectedProf(undefined);
+    setSearchQuery(target.value);
   };
 
   if (users) {
@@ -82,6 +89,13 @@ const UsersList = () => {
           )}
           <div className="d-flex flex-column">
             <SearchStatus length={count} />
+            <input
+              type="text"
+              name="searchQuery"
+              placeholder="Search..."
+              onChange={handleSearchQuery}
+              value={searchQuery}
+            />
             {count > 0 && (
               <UsersTable
                 users={usersCrop}
