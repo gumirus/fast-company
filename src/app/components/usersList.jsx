@@ -60,7 +60,6 @@ const UsersList = () => {
   if (users) {
     const filteredUsers = searchQuery
       ? users.filter((user) =>user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1): selectedProf? users.filter((user) => user.profession._id === selectedProf._id): users;
-
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
     const usersCrop = paginate(sortedUsers, currentPage, pageSize);
