@@ -1,2 +1,13 @@
 {
+  "window.zoomLevel": 0,
+  //main sdidor setting
+  "editor.wordWrap": "off",
+  "editor.folding": false,
+  "editor.smoothScrolling": true,
+  "editor.suggestSelection": "first",
+  //включите круглые скобки вокруг единственного параметра функцие стрелки
+  "prettier.arrowParens": "avoid",
+  //terminal
+  "terminal.integrated.fontSize": 13,
+  "git.enableSmartCommit": true
 }
