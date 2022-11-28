@@ -6,7 +6,8 @@ module.exports = {
   extends: ["eslint:recommended", "plugin:react/recommended"],
   overrides: [],
   parserOptions: {
-    ecmaVersion: "latest",
+    esmaFeatures: { jsx: true },
+    ecmaVersion: 12,
     sourceType: "module",
   },
   plugins: ["react"],
@@ -19,5 +20,6 @@ module.exports = {
     ],
     quotes: ["error", "double", { allowTemplateLiterals: true }],
     "multiline-ternary": ["off"],
+    // "no-unused-vars": ["off"],
   },
 };

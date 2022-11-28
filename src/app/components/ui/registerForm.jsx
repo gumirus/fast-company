@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [data, setData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const handleChange = ({ target }) => {
@@ -74,10 +74,10 @@ const LoginForm = () => {
         disabled={!isValid}
         className="btn btn-primary w-100 mx-auto"
       >
-        Отправить
+        Оформить
       </button>
     </form>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
