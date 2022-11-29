@@ -20,6 +20,7 @@ module.exports = {
     ],
     quotes: ["error", "double", { allowTemplateLiterals: true }],
     "multiline-ternary": ["off"],
-    // "no-unused-vars": ["off"],
+    "no-unused-vars": ["off"],
+    "react/no-unknown-property": ["off"],
   },
 };
