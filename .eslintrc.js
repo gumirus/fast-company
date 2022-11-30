@@ -22,5 +22,6 @@ module.exports = {
     "multiline-ternary": ["off"],
     "no-unused-vars": ["off"],
     "react/no-unknown-property": ["off"],
+    "react/jsx-no-undef": ["off"],
   },
 };

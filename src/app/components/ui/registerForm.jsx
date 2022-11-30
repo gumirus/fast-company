@@ -4,20 +4,26 @@ import TextField from "../common/form/textField";
 import API from "../../api";
 import SelectFild from "../common/form/selectFild";
 import RadioField from "../common/form/radioField";
+import MultiSelectField from "../common/form/multiSelectField";
+import CheckBoxField from "../common/form/checkBoxField";
 
 const RegisterForm = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
     profession: "",
-    sex: "male"
+    sex: "male",
+    qualities: [],
+    licence: false
   });
+  const [qualities, setQualities] = useState({});
   const [professions, setProfession] = useState();
   const [errors, setErrors] = useState({});
   useEffect(() => {
     API.professions.fetchAll().then((data) => setProfession(data));
+    API.qualities.fetchAll().then((data) => setQualities(data));
   }, []);
-  const handleChange = ({ target }) => {
+  const handleChange = (target) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
   };
   const validatorConfig = {
@@ -46,6 +52,12 @@ const RegisterForm = () => {
     },
     profession: {
       isRequired: { message: "Обязательно выберите вашу профессию" }
+    },
+    licence: {
+      isRequired: {
+        message:
+          "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
+      }
     }
   };
   useEffect(() => {
@@ -100,8 +112,24 @@ const RegisterForm = () => {
         ]}
         value={data.sex}
         name="sex"
-        onShange={handleChange}
+        onChange={handleChange}
+        label="Выберите ваш пол"
       />
+      <MultiSelectField
+        options={qualities}
+        onChange={handleChange}
+        name="qualities"
+        label="Выберите ваши качества"
+      />
+      <CheckBoxField
+        value={data.licence}
+        onChange={handleChange}
+        name="licence"
+        error={errors.licence}
+      >
+        Подтвердить <a>лецензионное солглашение</a>
+      </CheckBoxField>
+
       <button
         type="submit"
         disabled={!isValid}
