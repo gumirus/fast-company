@@ -8,8 +8,5 @@
     "main.0a675f44.js.map": "/fast-company/static/js/main.0a675f44.js.map",
     "787.4d212c3f.chunk.js.map": "/fast-company/static/js/787.4d212c3f.chunk.js.map"
   },
-  "entrypoints": [
-    "static/css/main.28cb4b2c.css",
-    "static/js/main.0a675f44.js"
-  ]
+  "entrypoints": ["static/css/main.28cb4b2c.css", "static/js/main.0a675f44.js"]
 }
