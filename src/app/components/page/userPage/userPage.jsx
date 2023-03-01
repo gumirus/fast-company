@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import API from "../../../api";
+import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
 
@@ -8,10 +8,10 @@ const UserPage = ({ userId }) => {
   const history = useHistory();
   const [user, setUser] = useState();
   useEffect(() => {
-    API.users.getById(userId).then((data) => setUser(data));
+    api.users.getById(userId).then((data) => setUser(data));
   }, []);
   const handleClick = () => {
-    history.push("/users");
+    history.push(history.location.pathname + "/edit");
   };
   if (user) {
     return (
@@ -23,7 +23,7 @@ const UserPage = ({ userId }) => {
           <h5>Встретился , раз : {user.completedMeetings}</h5>
           <h2>Rate: {user.rate}</h2>
           <button className="btn btn-outline-secondary" onClick={handleClick}>
-            Все Пользователи
+            Изменить
           </button>
         </div>
       </div>

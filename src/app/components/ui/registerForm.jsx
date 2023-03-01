@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
-import API from "../../api";
-import SelectFild from "../common/form/selectFild";
+import api from "../../api";
+import SelectFild from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
@@ -20,8 +20,8 @@ const RegisterForm = () => {
   const [professions, setProfession] = useState();
   const [errors, setErrors] = useState({});
   useEffect(() => {
-    API.professions.fetchAll().then((data) => setProfession(data));
-    API.qualities.fetchAll().then((data) => setQualities(data));
+    api.professions.fetchAll().then((data) => setProfession(data));
+    api.qualities.fetchAll().then((data) => setQualities(data));
   }, []);
   const handleChange = (target) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
