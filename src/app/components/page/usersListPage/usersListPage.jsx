@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../../../utils/paginate";
 import Pagination from "../../common/pagination";
-import API from "../../../api";
+import api from "../../../api";
 import PropTypes from "prop-types";
 import GroupList from "../../common/groupList";
 import SearchStatus from "../../ui/searchStatus";
@@ -17,7 +17,7 @@ const UsersListPage = () => {
 
   const [users, setUsers] = useState();
   useEffect(() => {
-    API.users.fetchAll().then((data) => setUsers(data));
+    api.users.fetchAll().then((data) => setUsers(data));
   }, []);
   const handleDelete = (userId) => {
     setUsers(users.filter((user) => user._id !== userId));
@@ -34,8 +34,9 @@ const UsersListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    API.professions.fetchAll().then((data) => setProfession(data));
+    api.professions.fetchAll().then((data) => setProfession(data));
   }, []);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedProf, searchQuery]);

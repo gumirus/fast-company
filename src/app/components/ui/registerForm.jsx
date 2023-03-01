@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import api from "../../api";
-import SelectFild from "../common/form/selectField";
+import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
@@ -16,15 +16,31 @@ const RegisterForm = () => {
     qualities: [],
     licence: false
   });
-  const [qualities, setQualities] = useState({});
-  const [professions, setProfession] = useState();
+  const [qualities, setQualities] = useState([]);
+  const [professions, setProfession] = useState([]);
   const [errors, setErrors] = useState({});
   useEffect(() => {
-    api.professions.fetchAll().then((data) => setProfession(data));
-    api.qualities.fetchAll().then((data) => setQualities(data));
+    api.professions.fetchAll().then((data) => {
+      const professionsList = Object.keys(data).map((professionName) => ({
+        label: data[professionName].name,
+        value: data[professionName]._id
+      }));
+      setProfession(professionsList);
+    });
+    api.qualities.fetchAll().then((data) => {
+      const qualitiesList = Object.keys(data).map((optionName) => ({
+        value: data[optionName]._id,
+        label: data[optionName].name,
+        color: data[optionName].color
+      }));
+      setQualities(qualitiesList);
+    });
   }, []);
   const handleChange = (target) => {
-    setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value
+    }));
   };
   const validatorConfig = {
     email: {
@@ -32,7 +48,7 @@ const RegisterForm = () => {
         message: "Электронная почта обязательна для заполнения"
       },
       isEmail: {
-        message: "@mail введен некорректно"
+        message: "Email введен некорректно"
       }
     },
     password: {
@@ -51,7 +67,9 @@ const RegisterForm = () => {
       }
     },
     profession: {
-      isRequired: { message: "Обязательно выберите вашу профессию" }
+      isRequired: {
+        message: "Обязательно выберите вашу профессию"
+      }
     },
     licence: {
       isRequired: {
@@ -96,7 +114,7 @@ const RegisterForm = () => {
         onChange={handleChange}
         error={errors.password}
       />
-      <SelectFild
+      <SelectField
         label="Выбери свою профессию"
         defaultOption="Choose..."
         name="profession"
@@ -129,7 +147,7 @@ const RegisterForm = () => {
         name="licence"
         error={errors.licence}
       >
-        Подтвердить <a>лецензионное солглашение</a>
+        Подтвердить <a>лицензионное соглашение</a>
       </CheckBoxField>
 
       <button
