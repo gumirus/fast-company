@@ -8,8 +8,12 @@ import SearchStatus from "../../ui/searchStatus";
 import UsersTable from "../../ui/usersTable";
 import _ from "lodash";
 import { FaBars } from "react-icons/fa"; // импорт иконки гамбургера
+import { useLocation } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { useState as useReactState } from "react";
 
 const UsersListPage = () => {
+  const location = useLocation();
   const [currentPage, setCurrentPage] = useState(1);
   const [professions, setProfession] = useState();
   const [selectedProf, setSelectedProf] = useState();
@@ -24,11 +28,17 @@ const UsersListPage = () => {
       setUsers(data);
     });
   }, []);
+  const { currentUser, logOut } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useReactState(false);
   const handleDelete = (userId) => {
     const updated = (allUsers || users).filter((user) => user._id !== userId);
     setAllUsers(updated);
     setUsers(updated);
     localStorage.setItem("users", JSON.stringify(updated)); // сохраняем изменения
+    if (currentUser && currentUser._id === userId) {
+      logOut();
+      setShowLogoutModal(true);
+    }
   };
   const handleToggleBookMark = (id) => {
     const newArray = (allUsers || users).map((user) => {
@@ -48,6 +58,15 @@ const UsersListPage = () => {
     api.professions.fetchAll().then((data) => {
       console.log("Professions loaded:", data);
       setProfession(data);
+      // Если пришёл profession из location.state, сразу выставить выбранную профессию
+      if (location.state && location.state.profession) {
+        const prof = Array.isArray(data)
+          ? data.find((p) => p._id === location.state.profession._id)
+          : Object.values(data).find(
+              (p) => p._id === location.state.profession._id
+            );
+        if (prof) setSelectedProf(prof);
+      }
     });
   }, []);
 
@@ -73,10 +92,10 @@ const UsersListPage = () => {
   };
 
   // Добавим состояние для ширины экрана
-  const [isProfMobile, setIsProfMobile] = useState(window.innerWidth < 1200);
+  const [isProfMobile, setIsProfMobile] = useState(window.innerWidth < 991);
   useEffect(() => {
     const handleResize = () => {
-      setIsProfMobile(window.innerWidth < 1200);
+      setIsProfMobile(window.innerWidth < 991);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -104,8 +123,42 @@ const UsersListPage = () => {
       setSelectedProf();
     };
 
+    // Модальное окно выхода
+    const LogoutModal = () => (
+      <div
+        className="avatar-modal-backdrop"
+        onClick={() => setShowLogoutModal(false)}
+      >
+        <div
+          className="avatar-modal"
+          onClick={(e) => e.stopPropagation()}
+          style={{ maxWidth: 400, textAlign: "center" }}
+        >
+          <button
+            className="btn-close avatar-modal-close"
+            onClick={() => setShowLogoutModal(false)}
+          ></button>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>🚪</div>
+          <h5 className="mb-2">Вы вышли из системы</h5>
+          <div className="mb-3">
+            Чтобы снова войти, зарегистрируйтесь заново.
+          </div>
+          <a href="/login/signUp" className="btn btn-success w-100 mb-2">
+            Зарегистрироваться
+          </a>
+          <button
+            className="btn btn-outline-secondary w-100"
+            onClick={() => setShowLogoutModal(false)}
+          >
+            Закрыть
+          </button>
+        </div>
+      </div>
+    );
+
     return (
       <div className="container mt-5">
+        {showLogoutModal && <LogoutModal />}
         <div className="row">
           {/* Мобильный гамбургер для панели профессий */}
           {isProfMobile && (
@@ -167,31 +220,60 @@ const UsersListPage = () => {
                   </button>
                 </div>
                 {professions ? (
-                  <>
-                    <GroupList
-                      selectedItem={selectedProf}
-                      items={
-                        Array.isArray(professions)
-                          ? professions
-                          : Object.values(professions)
-                      }
-                      onItemSelect={(item) => {
-                        handleProfessionSelect(item);
-                        setProfMenuOpen(false);
-                      }}
-                      valueProperty="_id"
-                      contentProperty="name"
-                    />
-                    <button
-                      className="btn btn-outline-secondary mt-2 w-100"
-                      onClick={() => {
-                        setSelectedProf();
-                        setProfMenuOpen(false);
-                      }}
-                    >
-                      Очистить
-                    </button>
-                  </>
+                  (() => {
+                    const profArray = Array.isArray(professions)
+                      ? professions
+                      : Object.values(professions);
+                    const half = Math.ceil(profArray.length / 2);
+                    const left = profArray.slice(0, half);
+                    const right = profArray.slice(half);
+                    return (
+                      <div className="row">
+                        <div className="col-6">
+                          <ul className="list-group mb-2">
+                            {left.map((item) => (
+                              <li
+                                key={item._id}
+                                className={
+                                  "list-group-item text-center" +
+                                  (item === selectedProf ? " active" : "")
+                                }
+                                onClick={() => {
+                                  handleProfessionSelect(item);
+                                  setProfMenuOpen(false);
+                                }}
+                                role="button"
+                                style={{ cursor: "pointer" }}
+                              >
+                                {item.name}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="col-6">
+                          <ul className="list-group mb-2">
+                            {right.map((item) => (
+                              <li
+                                key={item._id}
+                                className={
+                                  "list-group-item text-center" +
+                                  (item === selectedProf ? " active" : "")
+                                }
+                                onClick={() => {
+                                  handleProfessionSelect(item);
+                                  setProfMenuOpen(false);
+                                }}
+                                role="button"
+                                style={{ cursor: "pointer" }}
+                              >
+                                {item.name}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div>Загрузка профессий...</div>
                 )}

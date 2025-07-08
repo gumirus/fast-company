@@ -1,0 +1,70 @@
+.avatar-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 41, 59, 0.45); /* глубокий синий прозрачный */
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.avatar-modal {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 32px rgba(30, 41, 59, 0.18), 0 1.5px 6px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  position: relative;
+  animation: modalFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 100%;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.avatar-modal-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: #64748b;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(30, 41, 59, 0.08);
+  transition: background 0.2s, color 0.2s;
+}
+.avatar-modal-close:hover {
+  background: #e0e7ef;
+  color: #1e293b;
+}
+
+@media (max-width: 576px) {
+  .avatar-modal {
+    border-radius: 0;
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+  }
+  .avatar-modal-close {
+    top: 0.7rem;
+    right: 0.7rem;
+  }
+}

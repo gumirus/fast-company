@@ -8,10 +8,11 @@ import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { qualities as allQualities } from "../../api/fake.api/qualities";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signUp, logIn } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -114,6 +115,7 @@ const RegisterForm = () => {
 
     try {
       await signUp(newData);
+      await logIn({ email: newData.email, password: newData.password });
       navigate("/users");
     } catch (error) {
       setErrors(error);
@@ -130,13 +132,9 @@ const RegisterForm = () => {
   function getQualities(elements) {
     const qualitiesArray = [];
     for (const elem of elements) {
-      for (const quality in qualities) {
-        if (elem.value === qualities[quality].value) {
-          qualitiesArray.push({
-            _id: qualities[quality].value,
-            name: qualities[quality].label,
-            color: qualities[quality].color
-          });
+      for (const key in allQualities) {
+        if (elem.value === allQualities[key]._id) {
+          qualitiesArray.push({ ...allQualities[key] });
         }
       }
     }

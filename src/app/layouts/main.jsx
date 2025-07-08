@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import Avatar from "../components/ui/avatar";
+import UsersTable from "../components/ui/usersTable";
+import Pagination from "../components/common/pagination";
+import { paginate } from "../utils/paginate";
+import Quality from "../components/ui/qualities/quality";
+import { useAuth } from "../hooks/useAuth";
 
 const Main = () => {
   const [stats, setStats] = useState({
@@ -12,6 +17,20 @@ const Main = () => {
     recentUsers: [],
     maxRate: 5
   });
+  const [professionsList, setProfessionsList] = useState([]);
+  const [showProfModal, setShowProfModal] = useState(false);
+  const [showUsersModal, setShowUsersModal] = useState(false);
+  const [allUsers, setAllUsers] = useState([]);
+  const [usersPage, setUsersPage] = useState(1);
+  const usersPageSize = 6;
+  const navigate = useNavigate();
+  const [showQualModal, setShowQualModal] = useState(false);
+  const [qualitiesList, setQualitiesList] = useState([]);
+  const [selectedQuality, setSelectedQuality] = useState(null);
+  const [qualityUsersPage, setQualityUsersPage] = useState(1);
+  const qualityUsersPageSize = 6;
+  const [qualityUsers, setQualityUsers] = useState([]);
+  const { currentUser, logOut } = useAuth();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -35,6 +54,9 @@ const Main = () => {
           recentUsers: recent,
           maxRate
         });
+        setProfessionsList(Object.values(professions));
+        setAllUsers(users);
+        setQualitiesList(Object.values(qualities));
       } catch (error) {
         console.error("Error fetching stats:", error);
       }
@@ -79,18 +101,30 @@ const Main = () => {
               </h5>
               <h2 className="card-text">{stats.totalUsers}</h2>
               <p className="text-muted">Всего пользователей в системе</p>
+              <button
+                className="btn btn-outline-primary mt-2"
+                onClick={() => setShowUsersModal(true)}
+              >
+                Просмотреть пользователей
+              </button>
             </div>
           </div>
         </div>
         <div className="col-md-4 mb-3">
-          <div className="card text-center h-100">
+          <div
+            className="card text-center h-100"
+            style={{ cursor: "pointer" }}
+            onClick={() => setShowProfModal(true)}
+          >
             <div className="card-body">
               <h5 className="card-title text-success">
                 <i className="bi bi-briefcase-fill me-2"></i>
                 Профессии
               </h5>
               <h2 className="card-text">{stats.totalProfessions}</h2>
-              <p className="text-muted">Доступных профессий</p>
+              <p className="text-muted">
+                Доступных профессий (нажмите, чтобы посмотреть)
+              </p>
             </div>
           </div>
         </div>
@@ -103,10 +137,246 @@ const Main = () => {
               </h5>
               <h2 className="card-text">{stats.totalQualities}</h2>
               <p className="text-muted">Различных качеств</p>
+              <button
+                className="btn btn-outline-warning mt-2"
+                onClick={() => {
+                  setShowQualModal(true);
+                  setSelectedQuality(null);
+                }}
+              >
+                Просмотреть качества
+              </button>
             </div>
           </div>
         </div>
       </div>
+      {/* Модальное окно со списком профессий */}
+      {showProfModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowProfModal(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 500 }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowProfModal(false)}
+            ></button>
+            <h4 className="mb-3">Список профессий</h4>
+            <div className="row">
+              {(() => {
+                const half = Math.ceil(professionsList.length / 2);
+                const left = professionsList.slice(0, half);
+                const right = professionsList.slice(half);
+                const handleProfClick = (prof) => {
+                  setShowProfModal(false);
+                  navigate("/users", { state: { profession: prof } });
+                };
+                return (
+                  <>
+                    <div className="col-6">
+                      <ul className="list-group mb-2">
+                        {left.map((prof) => (
+                          <li
+                            key={prof._id}
+                            className="list-group-item text-center"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleProfClick(prof)}
+                          >
+                            {prof.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="col-6">
+                      <ul className="list-group mb-2">
+                        {right.map((prof) => (
+                          <li
+                            key={prof._id}
+                            className="list-group-item text-center"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleProfClick(prof)}
+                          >
+                            {prof.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно со всеми пользователями */}
+      {showUsersModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowUsersModal(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: 900,
+              minWidth: 320,
+              maxHeight: "90vh",
+              overflowY: "auto",
+              width: "100%",
+              // Для мобильных — всегда скролл
+              touchAction: "pan-y",
+              WebkitOverflowScrolling: "touch"
+            }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowUsersModal(false)}
+            ></button>
+            <h4 className="mb-3">Все пользователи</h4>
+            <UsersTable
+              users={paginate(allUsers, usersPage, usersPageSize)}
+              onSort={() => {}}
+              selectedSort={{ path: "name", order: "asc" }}
+              onToggleBookMark={() => {}}
+              onDelete={() => {}}
+            />
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                itemsCount={allUsers.length}
+                pageSize={usersPageSize}
+                currentPage={usersPage}
+                onPageChange={setUsersPage}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно со всеми качествами и пользователями по качеству */}
+      {showQualModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => {
+            setShowQualModal(false);
+            setSelectedQuality(null);
+            setQualityUsersPage(1);
+          }}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: window.innerWidth >= 992 ? 900 : "100vw",
+              minWidth: window.innerWidth >= 992 ? 320 : "100vw",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              width: "100%",
+              touchAction: "pan-y",
+              WebkitOverflowScrolling: "touch",
+              borderRadius: window.innerWidth < 576 ? 0 : undefined
+            }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => {
+                setShowQualModal(false);
+                setSelectedQuality(null);
+                setQualityUsersPage(1);
+              }}
+            ></button>
+            <h4 className="mb-3">
+              {selectedQuality
+                ? `Пользователи с качеством: ${selectedQuality.name}`
+                : "Список качеств"}
+            </h4>
+            {!selectedQuality ? (
+              <div className="row">
+                {(() => {
+                  const half = Math.ceil(qualitiesList.length / 2);
+                  const left = qualitiesList.slice(0, half);
+                  const right = qualitiesList.slice(half);
+                  const handleQualClick = (qual) => {
+                    setSelectedQuality(qual);
+                    // Найти пользователей с этим качеством
+                    const usersWithQual = allUsers.filter(
+                      (u) =>
+                        Array.isArray(u.qualities) &&
+                        u.qualities.some((q) => q._id === qual._id)
+                    );
+                    setQualityUsers(usersWithQual);
+                    setQualityUsersPage(1);
+                  };
+                  return (
+                    <>
+                      <div className="col-6">
+                        <ul className="list-group mb-2">
+                          {left.map((qual) => (
+                            <li
+                              key={qual._id}
+                              className="list-group-item text-center"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleQualClick(qual)}
+                            >
+                              <Quality {...qual} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="col-6">
+                        <ul className="list-group mb-2">
+                          {right.map((qual) => (
+                            <li
+                              key={qual._id}
+                              className="list-group-item text-center"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleQualClick(qual)}
+                            >
+                              <Quality {...qual} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            ) : (
+              <>
+                <UsersTable
+                  users={paginate(
+                    qualityUsers,
+                    qualityUsersPage,
+                    qualityUsersPageSize
+                  )}
+                  onSort={() => {}}
+                  selectedSort={{ path: "name", order: "asc" }}
+                  onToggleBookMark={() => {}}
+                  onDelete={() => {}}
+                />
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination
+                    itemsCount={qualityUsers.length}
+                    pageSize={qualityUsersPageSize}
+                    currentPage={qualityUsersPage}
+                    onPageChange={setQualityUsersPage}
+                  />
+                </div>
+                <button
+                  className="btn btn-outline-secondary mt-3 w-100"
+                  onClick={() => setSelectedQuality(null)}
+                >
+                  Назад к списку качеств
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="row mb-5">
@@ -117,10 +387,20 @@ const Main = () => {
               <i className="bi bi-people me-2"></i>
               Просмотреть пользователей
             </Link>
-            <Link to="/login" className="btn btn-outline-primary btn-lg">
-              <i className="bi bi-box-arrow-in-right me-2"></i>
-              Войти в систему
-            </Link>
+            {currentUser ? (
+              <button
+                className="btn btn-outline-danger btn-lg"
+                onClick={logOut}
+              >
+                <i className="bi bi-box-arrow-right me-2"></i>
+                Выйти
+              </button>
+            ) : (
+              <Link to="/login" className="btn btn-outline-primary btn-lg">
+                <i className="bi bi-box-arrow-in-right me-2"></i>
+                Войти в систему
+              </Link>
+            )}
             <Link to="/login/signUp" className="btn btn-outline-success btn-lg">
               <i className="bi bi-person-plus me-2"></i>
               Зарегистрироваться

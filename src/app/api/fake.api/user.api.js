@@ -1,36 +1,5 @@
 import { professionsObject as professions } from "./professions.api";
-const qualities = {
-  tedious: {
-    _id: "67rdca3eeb7f6fgeed471198",
-    name: "Нудила",
-    color: "primary"
-  },
-  strange: {
-    _id: "67rdca3eeb7f6fgeed471100",
-    name: "Странный",
-    color: "secondary"
-  },
-  buller: {
-    _id: "67rdca3eeb7f6fgeed4711012",
-    name: "Троль",
-    color: "success"
-  },
-  alcoholic: {
-    _id: "67rdca3eeb7f6fgeed471101",
-    name: "Алкоголик",
-    color: "danger"
-  },
-  handsome: {
-    _id: "67rdca3eeb7f6fgeed471102",
-    name: "Красавчик",
-    color: "info"
-  },
-  uncertain: {
-    _id: "67rdca3eeb7f6fgeed471103",
-    name: "Неуверенный",
-    color: "dark"
-  }
-};
+import { qualities } from "./qualities";
 
 const users = [
   {
@@ -40,7 +9,11 @@ const users = [
     sex: "male",
     profession: professions.doctor,
     avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    qualities: [qualities.tedious, qualities.uncertain, qualities.strange],
+    qualities: [
+      { ...qualities.tedious },
+      { ...qualities.uncertain },
+      { ...qualities.strange }
+    ],
     completedMeetings: 36,
     rate: 2.5,
     bookmark: false
@@ -52,7 +25,11 @@ const users = [
     sex: "male",
     profession: professions.doctor,
     avatarUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-    qualities: [qualities.buller, qualities.handsome, qualities.alcoholic],
+    qualities: [
+      { ...qualities.buller },
+      { ...qualities.handsome },
+      { ...qualities.alcoholic }
+    ],
     completedMeetings: 15,
     rate: 2.5,
     bookmark: false
@@ -64,7 +41,7 @@ const users = [
     sex: "male",
     profession: professions.doctor,
     avatarUrl: "https://randomuser.me/api/portraits/men/12.jpg",
-    qualities: [qualities.buller],
+    qualities: [{ ...qualities.buller }],
     completedMeetings: 247,
     rate: 3.5,
     bookmark: false
@@ -76,7 +53,7 @@ const users = [
     sex: "female",
     profession: professions.waiter,
     avatarUrl: "https://randomuser.me/api/portraits/women/32.jpg",
-    qualities: [qualities.uncertain],
+    qualities: [{ ...qualities.uncertain }],
     completedMeetings: 148,
     rate: 3.5,
     bookmark: false
@@ -88,7 +65,7 @@ const users = [
     sex: "male",
     profession: professions.physics,
     avatarUrl: "https://randomuser.me/api/portraits/men/67.jpg",
-    qualities: [qualities.strange, qualities.tedious],
+    qualities: [{ ...qualities.strange }, { ...qualities.tedious }],
     completedMeetings: 37,
     rate: 4.6,
     bookmark: false
@@ -100,7 +77,7 @@ const users = [
     sex: "male",
     profession: professions.physics,
     avatarUrl: "https://randomuser.me/api/portraits/men/14.jpg",
-    qualities: [qualities.strange, qualities.uncertain],
+    qualities: [{ ...qualities.strange }, { ...qualities.uncertain }],
     completedMeetings: 147,
     rate: 3.5,
     bookmark: false
@@ -112,7 +89,7 @@ const users = [
     sex: "male",
     profession: professions.engineer,
     avatarUrl: "https://randomuser.me/api/portraits/men/55.jpg",
-    qualities: [qualities.strange, qualities.tedious],
+    qualities: [{ ...qualities.strange }, { ...qualities.tedious }],
     completedMeetings: 72,
     rate: 3.5,
     bookmark: false
@@ -124,7 +101,7 @@ const users = [
     sex: "male",
     profession: professions.engineer,
     avatarUrl: "https://randomuser.me/api/portraits/men/77.jpg",
-    qualities: [qualities.handsome],
+    qualities: [{ ...qualities.handsome }],
     completedMeetings: 72,
     rate: 5,
     bookmark: false
@@ -136,7 +113,7 @@ const users = [
     sex: "female",
     profession: professions.cook,
     avatarUrl: "https://randomuser.me/api/portraits/women/45.jpg",
-    qualities: [qualities.strange, qualities.uncertain],
+    qualities: [{ ...qualities.strange }, { ...qualities.uncertain }],
     completedMeetings: 17,
     rate: 4.5,
     bookmark: false
@@ -148,7 +125,7 @@ const users = [
     sex: "male",
     profession: professions.cook,
     avatarUrl: "https://randomuser.me/api/portraits/men/88.jpg",
-    qualities: [qualities.handsome, qualities.buller],
+    qualities: [{ ...qualities.handsome }, { ...qualities.buller }],
     completedMeetings: 17,
     rate: 4.5,
     bookmark: false
@@ -160,7 +137,7 @@ const users = [
     sex: "male",
     profession: professions.actor,
     avatarUrl: "https://randomuser.me/api/portraits/men/23.jpg",
-    qualities: [qualities.uncertain, qualities.strange],
+    qualities: [{ ...qualities.uncertain }, { ...qualities.strange }],
     completedMeetings: 434,
     rate: 3.5,
     bookmark: false
@@ -172,12 +149,13 @@ const users = [
     sex: "male",
     profession: professions.actor,
     avatarUrl: "https://randomuser.me/api/portraits/men/90.jpg",
-    qualities: [qualities.handsome],
+    qualities: [{ ...qualities.handsome }],
     completedMeetings: 434,
     rate: 5,
     bookmark: false
   }
 ];
+
 if (!localStorage.getItem("users")) {
   localStorage.setItem("users", JSON.stringify(users));
 }
@@ -192,7 +170,12 @@ const update = (id, data) =>
   new Promise((resolve) => {
     const users = JSON.parse(localStorage.getItem("users"));
     const userIndex = users.findIndex((u) => u._id === id);
-    users[userIndex] = { ...users[userIndex], ...data };
+    // Глубокое копирование qualities, если они есть
+    let newData = { ...data };
+    if (Array.isArray(newData.qualities)) {
+      newData.qualities = newData.qualities.map((q) => ({ ...q }));
+    }
+    users[userIndex] = { ...users[userIndex], ...newData };
     localStorage.setItem("users", JSON.stringify(users));
     resolve(users[userIndex]);
   });

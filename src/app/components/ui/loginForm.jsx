@@ -15,6 +15,9 @@ const LoginForm = () => {
     stayOn: false
   });
   const [errors, setErrors] = useState({});
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
 
   const handleChange = (target) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
@@ -87,7 +90,12 @@ const LoginForm = () => {
       await logIn(data);
       navigate("/");
     } catch (error) {
-      setErrors(error);
+      if (error.message && error.message.includes("не найден")) {
+        setShowRegisterPrompt(true);
+      } else {
+        setErrorMessage(error.message || "Ошибка входа");
+        setShowErrorModal(true);
+      }
     }
   };
 
@@ -127,6 +135,67 @@ const LoginForm = () => {
           Войти
         </button>
       </form>
+      {showErrorModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowErrorModal(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 400, textAlign: "center" }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowErrorModal(false)}
+            ></button>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>😕</div>
+            <h5 className="mb-2">Ошибка входа</h5>
+            <div className="mb-3 text-danger">{errorMessage}</div>
+            <button
+              className="btn btn-primary w-100"
+              onClick={() => setShowErrorModal(false)}
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
+      {showRegisterPrompt && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowRegisterPrompt(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 400, textAlign: "center" }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowRegisterPrompt(false)}
+            ></button>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>🆕</div>
+            <h5 className="mb-2">Пользователь не найден</h5>
+            <div className="mb-3">Хотите зарегистрироваться?</div>
+            <button
+              className="btn btn-success w-100 mb-2"
+              onClick={() => {
+                setShowRegisterPrompt(false);
+                navigate("/login/signUp");
+              }}
+            >
+              Зарегистрироваться
+            </button>
+            <button
+              className="btn btn-outline-secondary w-100"
+              onClick={() => setShowRegisterPrompt(false)}
+            >
+              Отмена
+            </button>
+          </div>
+        </div>
+      )}
       <p className="mt-3 text-center">
         Нет аккаунта? <Link to="../signUp">Зарегистрироваться</Link>
       </p>

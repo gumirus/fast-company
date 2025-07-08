@@ -7,6 +7,7 @@ import Users from "./layouts/users";
 import LoginForm from "./components/ui/loginForm";
 import RegisterForm from "./components/ui/registerForm";
 import { AuthProvider } from "./hooks/useAuth";
+import ProfessionsListPage from "./components/page/professionsListPage/professionsListPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="signIn" element={<LoginForm />} />
             <Route path="signUp" element={<RegisterForm />} />
           </Route>
+          <Route path="/professions" element={<ProfessionsListPage />} />
           <Route path="/" element={<Main />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -33,19 +33,17 @@ const EditUserPage = () => {
     }
   };
   const getQualities = (elements) => {
-    const qualitiesArray = [];
-    for (const elem of elements) {
-      for (const quality in qualities) {
-        if (elem.value === qualities[quality].value) {
-          qualitiesArray.push({
-            _id: qualities[quality].value,
-            name: qualities[quality].label,
-            color: qualities[quality].color
-          });
-        }
-      }
-    }
-    return qualitiesArray;
+    return elements.map((elem) => {
+      const found = qualities.find((q) => q.value === elem.value);
+      return found
+        ? {
+            _id: found.value,
+            name: found.label,
+            color: found.color,
+            positive: found.positive
+          }
+        : {};
+    });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,7 +64,12 @@ const EditUserPage = () => {
     });
   };
   const transformData = (data) => {
-    return data.map((qual) => ({ label: qual.name, value: qual._id }));
+    return data.map((qual) => ({
+      label: qual.name,
+      value: qual._id,
+      color: qual.color,
+      positive: qual.positive
+    }));
   };
   useEffect(() => {
     setIsLoading(true);
@@ -91,7 +94,8 @@ const EditUserPage = () => {
       const qualitiesList = Object.keys(data).map((optionName) => ({
         value: data[optionName]._id,
         label: data[optionName].name,
-        color: data[optionName].color
+        color: data[optionName].color,
+        positive: data[optionName].positive
       }));
       setQualities(qualitiesList);
     });
