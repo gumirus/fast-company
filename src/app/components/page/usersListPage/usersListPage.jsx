@@ -16,20 +16,28 @@ const UsersListPage = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8;
 
+  const [allUsers, setAllUsers] = useState();
   const [users, setUsers] = useState();
   useEffect(() => {
-    api.users.fetchAll().then((data) => setUsers(data));
+    api.users.fetchAll().then((data) => {
+      setAllUsers(data);
+      setUsers(data);
+    });
   }, []);
   const handleDelete = (userId) => {
-    setUsers(users.filter((user) => user._id !== userId));
+    const updated = (allUsers || users).filter((user) => user._id !== userId);
+    setAllUsers(updated);
+    setUsers(updated);
+    localStorage.setItem("users", JSON.stringify(updated)); // сохраняем изменения
   };
   const handleToggleBookMark = (id) => {
-    const newArray = users.map((user) => {
+    const newArray = (allUsers || users).map((user) => {
       if (user._id === id) {
         return { ...user, bookmark: !user.bookmark };
       }
       return user;
     });
+    setAllUsers(newArray);
     setUsers(newArray);
   };
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,14 +73,17 @@ const UsersListPage = () => {
   };
 
   if (users) {
-    let filteredUsers = searchQuery
-      ? users.filter(
-          (user) =>
-            user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
-        )
-      : selectedProf
-      ? users.filter((user) => user.profession._id === selectedProf._id)
-      : users;
+    let filteredUsers = allUsers || users;
+    if (searchQuery) {
+      filteredUsers = filteredUsers.filter(
+        (user) =>
+          user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
+      );
+    } else if (selectedProf) {
+      filteredUsers = filteredUsers.filter(
+        (user) => user.profession._id === selectedProf._id
+      );
+    }
     if (showFavorites) {
       filteredUsers = filteredUsers.filter((user) => user.bookmark);
     }
