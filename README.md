@@ -1,1 +1,1 @@
-# [Fast-company](https://gumirus.github.io/fast-company)
+# [Fast-company](fast-company-ruby.vercel.app)
