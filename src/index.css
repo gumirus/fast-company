@@ -267,6 +267,12 @@ h6 {
   color: #fbbf24;
 }
 
+.dropdown-item.active {
+  font-weight: 700;
+  color: #14120f !important;
+  background-color: #f3f4f6 !important;
+}
+
 /* Современный плавный переход */
 * {
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
@@ -378,5 +384,13 @@ h6 {
   .prof-overlay-backdrop,
   .prof-overlay-content {
     display: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    flex-direction: row !important;
+    display: flex !important;
+    align-items: center;
   }
 }

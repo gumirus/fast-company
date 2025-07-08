@@ -72,6 +72,16 @@ const UsersListPage = () => {
     setSearchQuery(target.value);
   };
 
+  // Добавим состояние для ширины экрана
+  const [isProfMobile, setIsProfMobile] = useState(window.innerWidth < 1200);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsProfMobile(window.innerWidth < 1200);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (users) {
     let filteredUsers = allUsers || users;
     if (searchQuery) {
@@ -97,44 +107,48 @@ const UsersListPage = () => {
     return (
       <div className="container mt-5">
         <div className="row">
-          {/* Мобильный гамбургер */}
-          <div className="d-lg-none mb-3">
-            <button
-              className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center"
-              onClick={() => setProfMenuOpen(true)}
-              style={{ fontSize: 22 }}
-            >
-              <FaBars className="me-2" />
-              Профессии
-            </button>
-          </div>
+          {/* Мобильный гамбургер для панели профессий */}
+          {isProfMobile && (
+            <div className="mb-3">
+              <button
+                className="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center"
+                onClick={() => setProfMenuOpen(true)}
+                style={{ fontSize: 22 }}
+              >
+                <FaBars className="me-2" />
+                Профессии
+              </button>
+            </div>
+          )}
           {/* Панель профессий для десктопа */}
-          <div className="col-lg-3 mb-4 d-none d-lg-flex flex-column align-items-center profession-panel">
-            {professions ? (
-              <>
-                <h5>Профессии:</h5>
-                <GroupList
-                  selectedItem={selectedProf}
-                  items={
-                    Array.isArray(professions)
-                      ? professions
-                      : Object.values(professions)
-                  }
-                  onItemSelect={handleProfessionSelect}
-                  valueProperty="_id"
-                  contentProperty="name"
-                />
-                <button
-                  className="btn btn-outline-secondary mt-2"
-                  onClick={() => setSelectedProf()}
-                >
-                  Очистить
-                </button>
-              </>
-            ) : (
-              <div>Загрузка профессий...</div>
-            )}
-          </div>
+          {!isProfMobile && (
+            <div className="col-lg-3 mb-4 d-flex flex-column align-items-center profession-panel">
+              {professions ? (
+                <>
+                  <h5>Профессии:</h5>
+                  <GroupList
+                    selectedItem={selectedProf}
+                    items={
+                      Array.isArray(professions)
+                        ? professions
+                        : Object.values(professions)
+                    }
+                    onItemSelect={handleProfessionSelect}
+                    valueProperty="_id"
+                    contentProperty="name"
+                  />
+                  <button
+                    className="btn btn-outline-secondary mt-2"
+                    onClick={() => setSelectedProf()}
+                  >
+                    Очистить
+                  </button>
+                </>
+              ) : (
+                <div>Загрузка профессий...</div>
+              )}
+            </div>
+          )}
           {/* Overlay меню профессий для мобильных */}
           {isProfMenuOpen && (
             <div className="prof-overlay">

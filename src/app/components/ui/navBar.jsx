@@ -6,6 +6,15 @@ const NavBar = () => {
   const { currentUser, logOut } = useAuth();
   const [isOpen, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 769);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 769);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleMenu = () => {
     setOpen((prevState) => !prevState);
@@ -46,78 +55,86 @@ const NavBar = () => {
         </Link>
 
         {/* Desktop Links */}
-        <div className="d-none d-lg-flex navbar-nav">
-          <NavLink className="nav-link" end to="/">
-            Main
-          </NavLink>
-          {currentUser ? (
-            <>
-              <NavLink className="nav-link" to={`/users/${currentUser._id}`}>
-                {currentUser.name}
-              </NavLink>
-              <a className="nav-link" role="button" onClick={logOut}>
-                Выйти
-              </a>
-            </>
-          ) : (
-            <NavLink className="nav-link" to="/login">
-              Login
+        {!isMobile && (
+          <div className="navbar-nav">
+            <NavLink className="nav-link" end to="/">
+              Main
             </NavLink>
-          )}
-          <NavLink className="nav-link" to="/users">
-            Пользователи
-          </NavLink>
-        </div>
+            {currentUser ? (
+              <>
+                <NavLink className="nav-link" to={`/users/${currentUser._id}`}>
+                  {currentUser.name}
+                </NavLink>
+                <a className="nav-link" role="button" onClick={logOut}>
+                  Выйти
+                </a>
+              </>
+            ) : (
+              <NavLink className="nav-link" to="/login">
+                Login
+              </NavLink>
+            )}
+            <NavLink className="nav-link" to="/users">
+              Пользователи
+            </NavLink>
+          </div>
+        )}
 
         {/* Mobile Dropdown */}
-        <div className="d-lg-none" ref={menuRef}>
-          <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          {isOpen && (
-            <div className="custom-dropdown-menu">
-              <ul className="list-unstyled mb-0">
-                <li>
-                  <NavLink className="dropdown-item" end to="/">
-                    Main
-                  </NavLink>
-                </li>
-                {currentUser ? (
-                  <>
-                    <li>
-                      <NavLink
-                        className="dropdown-item"
-                        to={`/users/${currentUser._id}`}
-                      >
-                        {currentUser.name}
-                      </NavLink>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        role="button"
-                        onClick={logOut}
-                      >
-                        Выйти
-                      </a>
-                    </li>
-                  </>
-                ) : (
+        {isMobile && (
+          <div ref={menuRef}>
+            <button
+              className="navbar-toggler"
+              type="button"
+              onClick={toggleMenu}
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            {isOpen && (
+              <div className="custom-dropdown-menu">
+                <ul className="list-unstyled mb-0">
                   <li>
-                    <NavLink className="dropdown-item" to="/login">
-                      Login
+                    <NavLink className="dropdown-item" end to="/">
+                      Main
                     </NavLink>
                   </li>
-                )}
-                <li>
-                  <NavLink className="dropdown-item" to="/users">
-                    Пользователи
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+                  {currentUser ? (
+                    <>
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          to={`/users/${currentUser._id}`}
+                        >
+                          {currentUser.name}
+                        </NavLink>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          role="button"
+                          onClick={logOut}
+                        >
+                          Выйти
+                        </a>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
+                      <NavLink className="dropdown-item" to="/login">
+                        Login
+                      </NavLink>
+                    </li>
+                  )}
+                  <li>
+                    <NavLink className="dropdown-item" to="/users">
+                      Пользователи
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );
