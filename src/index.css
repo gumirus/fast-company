@@ -271,3 +271,70 @@ h6 {
 * {
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
+
+.avatar-hover:hover {
+  box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.13);
+  opacity: 0.92;
+  transition: box-shadow 0.2s, opacity 0.2s;
+}
+
+.avatar-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-modal {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.avatar-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.profession-panel {
+  min-width: 120px;
+  max-width: 150px;
+  width: 100%;
+}
+.profession-panel .list-group {
+  width: 100%;
+  max-width: 140px;
+  align-items: center;
+  margin: 0 auto;
+}
+.profession-panel .list-group-item {
+  text-align: center;
+  font-size: 1.01rem;
+  cursor: pointer;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.profession-panel h5 {
+  width: 100%;
+  text-align: center;
+}
+
+.col-lg-9 {
+  margin-left: -10px; /* уменьшить отступ между col-lg-3 и col-lg-9 */
+}
+@media (max-width: 992px) {
+  .col-lg-9 {
+    margin-left: 0;
+  }
+}

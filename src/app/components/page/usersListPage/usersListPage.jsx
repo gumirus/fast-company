@@ -32,6 +32,7 @@ const UsersListPage = () => {
     setUsers(newArray);
   };
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFavorites, setShowFavorites] = useState(false);
 
   useEffect(() => {
     api.professions.fetchAll().then((data) => {
@@ -62,7 +63,7 @@ const UsersListPage = () => {
   };
 
   if (users) {
-    const filteredUsers = searchQuery
+    let filteredUsers = searchQuery
       ? users.filter(
           (user) =>
             user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
@@ -70,6 +71,9 @@ const UsersListPage = () => {
       : selectedProf
       ? users.filter((user) => user.profession._id === selectedProf._id)
       : users;
+    if (showFavorites) {
+      filteredUsers = filteredUsers.filter((user) => user.bookmark);
+    }
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
     const usersCrop = paginate(sortedUsers, currentPage, pageSize);
@@ -80,7 +84,7 @@ const UsersListPage = () => {
     return (
       <div className="container mt-5">
         <div className="row">
-          <div className="col-lg-3 mb-4">
+          <div className="col-lg-3 mb-4 d-flex flex-column align-items-center profession-panel">
             {professions ? (
               <>
                 <h5>Профессии:</h5>
@@ -116,6 +120,14 @@ const UsersListPage = () => {
               value={searchQuery}
               className="form-control mb-3"
             />
+            <button
+              className={`btn btn-sm mb-3 me-2 ${
+                showFavorites ? "btn-warning" : "btn-outline-warning"
+              }`}
+              onClick={() => setShowFavorites((prev) => !prev)}
+            >
+              {showFavorites ? "Показать всех" : "Показать избранных"}
+            </button>
             {count > 0 && (
               <UsersTable
                 users={usersCrop}
