@@ -77,32 +77,63 @@ const Main = () => {
 
   return (
     <div className="container mt-5">
-      {/* Hero */}
-      <div className="row mb-5">
-        <div className="col-12 text-center">
-          <h1 className="display-4 mb-3">Fast Company</h1>
-          <p className="lead text-muted">
-            Управление пользователями и их качествами
-          </p>
+      {/* Верхние кнопки */}
+      <div className="row mb-4">
+        <div className="col-md-12 text-center">
+          {currentUser ? (
+            <>
+              <button
+                className="btn btn-outline-primary btn-lg me-2"
+                onClick={() => setShowUsersModal(true)}
+              >
+                <i className="bi bi-people me-2"></i>
+                Просмотреть пользователей
+              </button>
+              <button
+                className="btn btn-outline-danger btn-lg"
+                onClick={logOut}
+              >
+                <i className="bi bi-box-arrow-right me-2"></i>
+                Выйти
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn btn-outline-primary btn-lg me-2">
+                <i className="bi bi-box-arrow-in-right me-2"></i>
+                Войти в систему
+              </Link>
+              <Link
+                to="/login/signUp"
+                className="btn btn-outline-success btn-lg"
+              >
+                <i className="bi bi-person-plus me-2"></i>
+                Зарегистрироваться
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Cards */}
-      <div className="row mb-5">
+      {/* Статистика: пользователи, профессии, качества */}
+      <div className="row mb-4">
         <div className="col-md-4 mb-3">
           <div className="card text-center h-100">
             <div className="card-body">
               <h5 className="card-title text-primary">
-                <i className="bi bi-people-fill me-2"></i>Пользователи
+                <i className="bi bi-people-fill me-2"></i>
+                Пользователи
               </h5>
-              <h2>{stats.totalUsers}</h2>
+              <h2 className="card-text">{stats.totalUsers}</h2>
               <p className="text-muted">Всего пользователей в системе</p>
-              <button
-                className="btn btn-outline-primary mt-2"
-                onClick={() => setShowUsersModal(true)}
-              >
-                Просмотреть пользователей
-              </button>
+              {currentUser && (
+                <button
+                  className="btn btn-outline-primary mt-2"
+                  onClick={() => setShowUsersModal(true)}
+                >
+                  Просмотреть пользователей
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -114,12 +145,12 @@ const Main = () => {
           >
             <div className="card-body">
               <h5 className="card-title text-success">
-                <i className="bi bi-briefcase-fill me-2"></i>Профессии
+                <i className="bi bi-briefcase-fill me-2"></i>
+                Профессии
               </h5>
-              <h2>{stats.totalProfessions}</h2>
-              <p className="text-muted">
-                Доступных профессий (нажмите, чтобы посмотреть)
-              </p>
+              <h2 className="card-text">{stats.totalProfessions}</h2>
+              <p className="text-muted">Доступных профессий</p>
+              <p className="text-muted">(нажмите, чтобы посмотреть)</p>
             </div>
           </div>
         </div>
@@ -127,9 +158,10 @@ const Main = () => {
           <div className="card text-center h-100">
             <div className="card-body">
               <h5 className="card-title text-warning">
-                <i className="bi bi-star-fill me-2"></i>Качества
+                <i className="bi bi-stars me-2"></i>
+                Качества
               </h5>
-              <h2>{stats.totalQualities}</h2>
+              <h2 className="card-text">{stats.totalQualities}</h2>
               <p className="text-muted">Различных качеств</p>
               <button
                 className="btn btn-outline-warning mt-2"
@@ -145,64 +177,259 @@ const Main = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="row mb-5">
-        <div className="col-12">
-          <h3 className="mb-4">Быстрые действия</h3>
-          <div className="d-flex flex-wrap gap-3">
-            <Link to="/users" className="btn btn-primary btn-lg">
-              <i className="bi bi-people me-2"></i>Просмотреть пользователей
-            </Link>
-            {!currentUser && (
+      {/* Модальное окно со списком профессий */}
+      {showProfModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowProfModal(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: 500 }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowProfModal(false)}
+            ></button>
+            <h4 className="mb-3">Список профессий</h4>
+            <div className="row">
+              {(() => {
+                const half = Math.ceil(professionsList.length / 2);
+                const left = professionsList.slice(0, half);
+                const right = professionsList.slice(half);
+                const handleProfClick = (prof) => {
+                  setShowProfModal(false);
+                  navigate("/users", { state: { profession: prof } });
+                };
+                return (
+                  <>
+                    <div className="col-6">
+                      <ul className="list-group mb-2">
+                        {left.map((prof) => (
+                          <li
+                            key={prof._id}
+                            className="list-group-item text-center"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleProfClick(prof)}
+                          >
+                            {prof.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="col-6">
+                      <ul className="list-group mb-2">
+                        {right.map((prof) => (
+                          <li
+                            key={prof._id}
+                            className="list-group-item text-center"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleProfClick(prof)}
+                          >
+                            {prof.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно со всеми пользователями */}
+      {showUsersModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => setShowUsersModal(false)}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: 900,
+              minWidth: 320,
+              maxHeight: "90vh",
+              overflowY: "auto",
+              width: "100%",
+              touchAction: "pan-y",
+              WebkitOverflowScrolling: "touch"
+            }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => setShowUsersModal(false)}
+            ></button>
+            <h4 className="mb-3">Все пользователи</h4>
+            <UsersTable
+              users={paginate(allUsers, usersPage, usersPageSize)}
+              onSort={() => {}}
+              selectedSort={{ path: "name", order: "asc" }}
+              onToggleBookMark={() => {}}
+              onDelete={() => {}}
+            />
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination
+                itemsCount={allUsers.length}
+                pageSize={usersPageSize}
+                currentPage={usersPage}
+                onPageChange={setUsersPage}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно со всеми качествами и пользователями по качеству */}
+      {showQualModal && (
+        <div
+          className="avatar-modal-backdrop"
+          onClick={() => {
+            setShowQualModal(false);
+            setSelectedQuality(null);
+            setQualityUsersPage(1);
+          }}
+        >
+          <div
+            className="avatar-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: window.innerWidth >= 992 ? 900 : "100vw",
+              minWidth: window.innerWidth >= 992 ? 320 : "100vw",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              width: "100%",
+              touchAction: "pan-y",
+              WebkitOverflowScrolling: "touch",
+              borderRadius: window.innerWidth < 576 ? 0 : undefined
+            }}
+          >
+            <button
+              className="btn-close avatar-modal-close"
+              onClick={() => {
+                setShowQualModal(false);
+                setSelectedQuality(null);
+                setQualityUsersPage(1);
+              }}
+            ></button>
+            <h4 className="mb-3">
+              {selectedQuality
+                ? `Пользователи с качеством: ${selectedQuality.name}`
+                : "Список качеств"}
+            </h4>
+            {!selectedQuality ? (
+              <div className="row">
+                {(() => {
+                  const half = Math.ceil(qualitiesList.length / 2);
+                  const left = qualitiesList.slice(0, half);
+                  const right = qualitiesList.slice(half);
+                  const handleQualClick = (qual) => {
+                    setSelectedQuality(qual);
+                    const usersWithQual = allUsers.filter(
+                      (u) =>
+                        Array.isArray(u.qualities) &&
+                        u.qualities.some((q) => q._id === qual._id)
+                    );
+                    setQualityUsers(usersWithQual);
+                    setQualityUsersPage(1);
+                  };
+                  return (
+                    <>
+                      <div className="col-6">
+                        <ul className="list-group mb-2">
+                          {left.map((qual) => (
+                            <li
+                              key={qual._id}
+                              className="list-group-item text-center"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleQualClick(qual)}
+                            >
+                              <Quality {...qual} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="col-6">
+                        <ul className="list-group mb-2">
+                          {right.map((qual) => (
+                            <li
+                              key={qual._id}
+                              className="list-group-item text-center"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleQualClick(qual)}
+                            >
+                              <Quality {...qual} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            ) : (
               <>
-                <Link to="/login" className="btn btn-outline-primary btn-lg">
-                  <i className="bi bi-box-arrow-in-right me-2"></i>Войти в
-                  систему
-                </Link>
-                <Link
-                  to="/login/signUp"
-                  className="btn btn-outline-success btn-lg"
+                <UsersTable
+                  users={paginate(
+                    qualityUsers,
+                    qualityUsersPage,
+                    qualityUsersPageSize
+                  )}
+                  onSort={() => {}}
+                  selectedSort={{ path: "name", order: "asc" }}
+                  onToggleBookMark={() => {}}
+                  onDelete={() => {}}
+                />
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination
+                    itemsCount={qualityUsers.length}
+                    pageSize={qualityUsersPageSize}
+                    currentPage={qualityUsersPage}
+                    onPageChange={setQualityUsersPage}
+                  />
+                </div>
+                <button
+                  className="btn btn-outline-secondary mt-3 w-100"
+                  onClick={() => setSelectedQuality(null)}
                 >
-                  <i className="bi bi-person-plus me-2"></i>Зарегистрироваться
-                </Link>
+                  Назад к списку качеств
+                </button>
               </>
-            )}
-            {currentUser && (
-              <button
-                className="btn btn-outline-danger btn-lg"
-                onClick={logOut}
-              >
-                <i className="bi bi-box-arrow-right me-2"></i>Выйти
-              </button>
             )}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Top Rated */}
+      {/* Лучший пользователь */}
       {stats.topRatedUser && (
         <div className="row mb-5">
           <div className="col-12">
             <h3 className="mb-4">Лучший пользователь</h3>
             <div className="card">
-              <div className="card-body d-flex align-items-center">
-                <Avatar user={stats.topRatedUser} size="xl" />
-                <div className="ms-3">
-                  <h4 className="mb-1">{stats.topRatedUser.name}</h4>
-                  <p className="text-muted mb-1">
-                    {stats.topRatedUser.profession.name}
-                  </p>
-                  <div className="d-flex align-items-center">
-                    <span
-                      className={`badge ${
-                        getRatingInfo(stats.topRatedUser.rate).color
-                      } me-2`}
-                    >
-                      Рейтинг: {getRatingInfo(stats.topRatedUser.rate).percent}%
-                    </span>
-                    <span className="badge bg-info">
-                      Встреч: {stats.topRatedUser.completedMeetings}
-                    </span>
+              <div className="card-body">
+                <div className="d-flex align-items-center">
+                  <Avatar user={stats.topRatedUser} size="xl" />
+                  <div className="ms-3">
+                    <h4 className="mb-1">{stats.topRatedUser.name}</h4>
+                    <p className="text-muted mb-1">
+                      {stats.topRatedUser.profession.name}
+                    </p>
+                    <div className="d-flex align-items-center">
+                      <span
+                        className={`badge ${
+                          getRatingInfo(stats.topRatedUser.rate).color
+                        } me-2`}
+                      >
+                        Рейтинг:{" "}
+                        {getRatingInfo(stats.topRatedUser.rate).percent}%
+                      </span>
+                      <span className="badge bg-info">
+                        Встреч: {stats.topRatedUser.completedMeetings}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -211,7 +438,7 @@ const Main = () => {
         </div>
       )}
 
-      {/* Recent Users */}
+      {/* Недавние пользователи */}
       {stats.recentUsers.length > 0 && (
         <div className="row mb-5">
           <div className="col-12">
@@ -252,7 +479,7 @@ const Main = () => {
         </div>
       )}
 
-      {/* Features */}
+      {/* Возможности системы */}
       <div className="row mb-5">
         <div className="col-12">
           <h3 className="mb-4">Возможности системы</h3>
@@ -262,7 +489,7 @@ const Main = () => {
                 <div className="flex-shrink-0">
                   <i className="bi bi-search text-primary fs-4"></i>
                 </div>
-                <div className="ms-3">
+                <div className="flex-grow-1 ms-3">
                   <h5>Поиск и фильтрация</h5>
                   <p className="text-muted">
                     Быстрый поиск пользователей по имени и фильтрация по
@@ -276,7 +503,7 @@ const Main = () => {
                 <div className="flex-shrink-0">
                   <i className="bi bi-star text-warning fs-4"></i>
                 </div>
-                <div className="ms-3">
+                <div className="flex-grow-1 ms-3">
                   <h5>Система рейтингов</h5>
                   <p className="text-muted">
                     Оценка пользователей и отслеживание их активности
@@ -289,7 +516,7 @@ const Main = () => {
                 <div className="flex-shrink-0">
                   <i className="bi bi-bookmark text-success fs-4"></i>
                 </div>
-                <div className="ms-3">
+                <div className="flex-grow-1 ms-3">
                   <h5>Избранное</h5>
                   <p className="text-muted">
                     Сохранение важных пользователей в избранное
@@ -300,12 +527,12 @@ const Main = () => {
             <div className="col-md-6 mb-3">
               <div className="d-flex">
                 <div className="flex-shrink-0">
-                  <i className="bi bi-pencil text-info fs-4"></i>
+                  <i className="bi bi-people-fill text-primary fs-4"></i>
                 </div>
-                <div className="ms-3">
-                  <h5>Редактирование</h5>
+                <div className="flex-grow-1 ms-3">
+                  <h5>Управление пользователями</h5>
                   <p className="text-muted">
-                    Удобное редактирование профилей пользователей
+                    Просмотр, редактирование и удаление пользователей
                   </p>
                 </div>
               </div>
