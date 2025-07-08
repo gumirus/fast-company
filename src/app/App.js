@@ -6,21 +6,24 @@ import Login from "./layouts/login";
 import Users from "./layouts/users";
 import LoginForm from "./components/ui/loginForm";
 import RegisterForm from "./components/ui/registerForm";
+import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
   return (
     <div>
-      <NavBar />
-      <Routes>
-        <Route path="/users/:userId?/:edit?" element={<Users />} />
-        <Route path="/login" element={<Login />}>
-          <Route index element={<Navigate to="signIn" />} />
-          <Route path="signIn" element={<LoginForm />} />
-          <Route path="signUp" element={<RegisterForm />} />
-        </Route>
-        <Route path="/" element={<Main />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AuthProvider>
+        <NavBar />
+        <Routes>
+          <Route path="/users/:userId?/:edit?" element={<Users />} />
+          <Route path="/login" element={<Login />}>
+            <Route index element={<Navigate to="signIn" />} />
+            <Route path="signIn" element={<LoginForm />} />
+            <Route path="signUp" element={<RegisterForm />} />
+          </Route>
+          <Route path="/" element={<Main />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </div>
   );
 }

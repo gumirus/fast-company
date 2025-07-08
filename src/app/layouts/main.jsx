@@ -106,10 +106,7 @@ const Main = () => {
               <i className="bi bi-box-arrow-in-right me-2"></i>
               Войти в систему
             </Link>
-            <Link
-              to="/login/register"
-              className="btn btn-outline-success btn-lg"
-            >
+            <Link to="/login/signUp" className="btn btn-outline-success btn-lg">
               <i className="bi bi-person-plus me-2"></i>
               Зарегистрироваться
             </Link>

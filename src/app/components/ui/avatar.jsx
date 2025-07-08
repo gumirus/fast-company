@@ -2,7 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Avatar = ({ user, size = "md" }) => {
+    // Если user не определен, показываем заглушку
+    if (!user) {
+        return (
+            <div
+                className="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                style={{
+                    width: "40px",
+                    height: "40px",
+                    border: "2px solid #e9ecef"
+                }}
+            >
+                <i className="bi bi-person-fill text-muted"></i>
+            </div>
+        );
+    }
   const getInitials = (name) => {
+    if (!name) return "?";
     return name
       .split(" ")
       .map((word) => word.charAt(0))
@@ -12,6 +28,7 @@ const Avatar = ({ user, size = "md" }) => {
   };
 
   const getAvatarColor = (name) => {
+    if (!name) return "bg-light"; // Fallback for no name
     const colors = [
       "bg-primary",
       "bg-secondary",
@@ -42,6 +59,7 @@ const Avatar = ({ user, size = "md" }) => {
 
   // Генерируем уникальный seed на основе имени пользователя
   const generateSeed = (name) => {
+    if (!name) return "placeholder";
     return name.toLowerCase().replace(/\s+/g, "");
   };
 
@@ -69,7 +87,7 @@ const Avatar = ({ user, size = "md" }) => {
       >
         <img
           src={avatarSrc}
-          alt={`Avatar of ${user.name}`}
+          alt={`Avatar of ${user.name || "user"}`}
           style={{
             width: "100%",
             height: "100%",
@@ -84,7 +102,7 @@ const Avatar = ({ user, size = "md" }) => {
         {/* Fallback с инициалами */}
         <div
           className={`rounded-circle d-flex align-items-center justify-content-center text-white ${getAvatarColor(
-            user.name
+            user.name || "Default"
           )} ${sizeClasses[size]}`}
           style={{
             width: "100%",
@@ -105,7 +123,7 @@ const Avatar = ({ user, size = "md" }) => {
                   : "18px"
             }}
           >
-            {getInitials(user.name)}
+            {getInitials(user.name || "??")}
           </span>
         </div>
       </div>
@@ -114,7 +132,7 @@ const Avatar = ({ user, size = "md" }) => {
 };
 
 Avatar.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object, // делаем user необязательным
   size: PropTypes.oneOf(["sm", "md", "lg", "xl"])
 };
 

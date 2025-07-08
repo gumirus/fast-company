@@ -207,8 +207,26 @@ const getById = (id) =>
       );
     }, 1000);
   });
+
+const create = (data) =>
+  new Promise((resolve) => {
+    const users = JSON.parse(localStorage.getItem("users"));
+    const newUser = {
+      ...data,
+      _id: String(Date.now()),
+      completedMeetings: 0,
+      rate: 0,
+      bookmark: false,
+      created_at: Date.now()
+    };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    resolve(newUser);
+  });
+
 export default {
   fetchAll,
   getById,
-  update
+  update,
+  create
 };

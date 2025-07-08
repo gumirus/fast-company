@@ -6,16 +6,21 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [data, setData] = useState({
     email: "",
     password: "",
+    name: "", // Добавил имя
     profession: "",
     sex: "male",
     qualities: [],
-    licence: false
+    licence: false,
+    avatarUrl: "" // Исправил название поля
   });
   const [qualities, setQualities] = useState([]);
   const [professions, setProfession] = useState([]);
@@ -50,6 +55,12 @@ const RegisterForm = () => {
       },
       isEmail: {
         message: "Email введен некорректно"
+      }
+    },
+    name: {
+      // Добавил валидацию для имени
+      isRequired: {
+        message: "Имя обязательно для заполнения"
       }
     },
     password: {
@@ -89,17 +100,61 @@ const RegisterForm = () => {
   };
   const isValid = Object.keys(errors).length === 0;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return;
-    console.log(data);
+
+    const { profession, qualities, ...rest } = data;
+    const newData = {
+      ...rest,
+      profession: getProfessionById(profession),
+      qualities: getQualities(qualities)
+    };
+
+    try {
+      await signUp(newData);
+      navigate("/users");
+    } catch (error) {
+      setErrors(error);
+    }
   };
+
+  function getProfessionById(id) {
+    for (const prof in professions) {
+      if (professions[prof].value === id) {
+        return { _id: professions[prof].value, name: professions[prof].label };
+      }
+    }
+  }
+  function getQualities(elements) {
+    const qualitiesArray = [];
+    for (const elem of elements) {
+      for (const quality in qualities) {
+        if (elem.value === qualities[quality].value) {
+          qualitiesArray.push({
+            _id: qualities[quality].value,
+            name: qualities[quality].label,
+            color: qualities[quality].color
+          });
+        }
+      }
+    }
+    return qualitiesArray;
+  }
 
   return (
     <>
       <h3 className="mb-4">Register</h3>
       <form onSubmit={handleSubmit}>
+        <TextField
+          label="Имя"
+          placeholder="Ваше имя"
+          name="name"
+          value={data.name}
+          onChange={handleChange}
+          error={errors.name}
+        />
         <TextField
           label="Почта"
           placeholder="@mail :"
@@ -116,6 +171,14 @@ const RegisterForm = () => {
           value={data.password}
           onChange={handleChange}
           error={errors.password}
+        />
+        <TextField
+          label="Аватар (URL)"
+          placeholder="https://example.com/avatar.jpg"
+          name="avatarUrl"
+          value={data.avatarUrl}
+          onChange={handleChange}
+          error={errors.avatarUrl}
         />
         <SelectField
           label="Выбери свою профессию"
