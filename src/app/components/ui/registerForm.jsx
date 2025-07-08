@@ -6,6 +6,7 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
+import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [data, setData] = useState({
@@ -96,68 +97,74 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Почта"
-        placeholder="@mail :"
-        name="email"
-        value={data.email}
-        onChange={handleChange}
-        error={errors.email}
-      />
-      <TextField
-        label="Пароль"
-        placeholder="Пароль :"
-        type="password"
-        name="password"
-        value={data.password}
-        onChange={handleChange}
-        error={errors.password}
-      />
-      <SelectField
-        label="Выбери свою профессию"
-        defaultOption="Choose..."
-        name="profession"
-        options={professions}
-        onChange={handleChange}
-        value={data.profession}
-        error={errors.profession}
-      />
-      <RadioField
-        options={[
-          { name: "Male", value: "male" },
-          { name: "Female", value: "female" },
-          { name: "Other", value: "other" }
-        ]}
-        value={data.sex}
-        name="sex"
-        onChange={handleChange}
-        label="Выберите ваш пол"
-      />
-      <MultiSelectField
-        options={qualities}
-        onChange={handleChange}
-        defaultValue={data.qualities}
-        name="qualities"
-        label="Выберите ваши качества"
-      />
-      <CheckBoxField
-        value={data.licence}
-        onChange={handleChange}
-        name="licence"
-        error={errors.licence}
-      >
-        Подтвердить <a>лицензионное соглашение</a>
-      </CheckBoxField>
+    <>
+      <h3 className="mb-4">Register</h3>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Почта"
+          placeholder="@mail :"
+          name="email"
+          value={data.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
+        <TextField
+          label="Пароль"
+          placeholder="Пароль :"
+          type="password"
+          name="password"
+          value={data.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
+        <SelectField
+          label="Выбери свою профессию"
+          defaultOption="Choose..."
+          name="profession"
+          options={professions}
+          onChange={handleChange}
+          value={data.profession}
+          error={errors.profession}
+        />
+        <RadioField
+          options={[
+            { name: "Male", value: "male" },
+            { name: "Female", value: "female" },
+            { name: "Other", value: "other" }
+          ]}
+          value={data.sex}
+          name="sex"
+          onChange={handleChange}
+          label="Выберите ваш пол"
+        />
+        <MultiSelectField
+          options={qualities}
+          onChange={handleChange}
+          defaultValue={data.qualities}
+          name="qualities"
+          label="Выберите ваши качества"
+        />
+        <CheckBoxField
+          value={data.licence}
+          onChange={handleChange}
+          name="licence"
+          error={errors.licence}
+        >
+          Подтвердить <a>лицензионное соглашение</a>
+        </CheckBoxField>
 
-      <button
-        type="submit"
-        disabled={!isValid}
-        className="btn btn-primary w-100 mx-auto"
-      >
-        Submit
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={!isValid}
+          className="btn btn-primary w-100 mx-auto"
+        >
+          Submit
+        </button>
+      </form>
+      <p className="mt-3 text-center">
+        Уже есть аккаунт? <Link to="../signIn">Войти</Link>
+      </p>
+    </>
   );
 };
 

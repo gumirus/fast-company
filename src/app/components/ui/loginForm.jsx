@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
+import { Link } from "react-router-dom";
 // import * as yup from "yup";
 
 const LoginForm = () => {
@@ -79,35 +80,45 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Почта"
-        placeholder="@mail :"
-        name="email"
-        value={data.email}
-        onChange={handleChange}
-        error={errors.email}
-      />
-      <TextField
-        label="Пароль"
-        placeholder="Пароль :"
-        type="password"
-        name="password"
-        value={data.password}
-        onChange={handleChange}
-        error={errors.password}
-      />
-      <CheckBoxField value={data.stayOn} onChange={handleChange} name="stayOn">
-        Оставаться в системе
-      </CheckBoxField>
-      <button
-        type="submit"
-        disabled={!isValid}
-        className="btn btn-primary w-100 mx-auto"
-      >
-        Отправить
-      </button>
-    </form>
+    <>
+      <h3 className="mb-4">Login</h3>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Почта"
+          placeholder="@mail :"
+          name="email"
+          value={data.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
+        <TextField
+          label="Пароль"
+          placeholder="Пароль :"
+          type="password"
+          name="password"
+          value={data.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
+        <CheckBoxField
+          value={data.stayOn}
+          onChange={handleChange}
+          name="stayOn"
+        >
+          Оставаться в системе
+        </CheckBoxField>
+        <button
+          type="submit"
+          disabled={!isValid}
+          className="btn btn-primary w-100 mx-auto"
+        >
+          Отправить
+        </button>
+      </form>
+      <p className="mt-3 text-center">
+        Нет аккаунта? <Link to="../signUp">Зарегистрироваться</Link>
+      </p>
+    </>
   );
 };
 

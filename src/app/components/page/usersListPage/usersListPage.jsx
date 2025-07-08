@@ -79,11 +79,8 @@ const UsersListPage = () => {
 
     return (
       <div className="container mt-5">
-        <div className="d-flex">
-          <div
-            className="d-flex flex-column flex-shrink-0 p-3"
-            style={{ minWidth: "200px" }}
-          >
+        <div className="row">
+          <div className="col-lg-3 mb-4">
             {professions ? (
               <>
                 <h5>Профессии:</h5>
@@ -109,7 +106,7 @@ const UsersListPage = () => {
               <div>Загрузка профессий...</div>
             )}
           </div>
-          <div className="d-flex flex-column flex-grow-1">
+          <div className="col-lg-9">
             <SearchStatus length={count} />
             <input
               type="text"
