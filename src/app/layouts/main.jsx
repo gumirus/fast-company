@@ -83,13 +83,6 @@ const Main = () => {
           {currentUser ? (
             <>
               <button
-                className="btn btn-outline-primary btn-lg me-2"
-                onClick={() => setShowUsersModal(true)}
-              >
-                <i className="bi bi-people me-2"></i>
-                Просмотреть пользователей
-              </button>
-              <button
                 className="btn btn-outline-danger btn-lg"
                 onClick={logOut}
               >
