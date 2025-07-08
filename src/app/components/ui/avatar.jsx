@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Avatar = ({ user, size = "md", style = "avataaars" }) => {
+const Avatar = ({ user, size = "md" }) => {
   const getInitials = (name) => {
     return name
       .split(" ")
@@ -45,57 +45,17 @@ const Avatar = ({ user, size = "md", style = "avataaars" }) => {
     return name.toLowerCase().replace(/\s+/g, "");
   };
 
-  // Создаем URL для аватара из DiceBear с разными стилями
-  const getAvatarUrl = (name, size, avatarStyle) => {
+  // Используем только стиль micah для всех аватаров
+  const getAvatarUrl = (name, size) => {
     const seed = generateSeed(name);
     const sizePx = sizePixels[size];
-
-    // Разные стили аватаров для разнообразия
-    const styles = {
-      avataaars: `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&size=${sizePx}`,
-      bottts: `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&size=${sizePx}`,
-      pixel: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${seed}&size=${sizePx}`,
-      identicon: `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}&size=${sizePx}`,
-      initials: `https://api.dicebear.com/7.x/initials/svg?seed=${seed}&size=${sizePx}`,
-      lorelei: `https://api.dicebear.com/7.x/lorelei/svg?seed=${seed}&size=${sizePx}`,
-      micah: `https://api.dicebear.com/7.x/micah/svg?seed=${seed}&size=${sizePx}`,
-      miniavs: `https://api.dicebear.com/7.x/miniavs/svg?seed=${seed}&size=${sizePx}`,
-      bigEars: `https://api.dicebear.com/7.x/big-ears/svg?seed=${seed}&size=${sizePx}`,
-      bigSmile: `https://api.dicebear.com/7.x/big-smile/svg?seed=${seed}&size=${sizePx}`,
-      croodles: `https://api.dicebear.com/7.x/croodles/svg?seed=${seed}&size=${sizePx}`,
-      funEmoji: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}&size=${sizePx}`,
-      notionists: `https://api.dicebear.com/7.x/notionists/svg?seed=${seed}&size=${sizePx}`,
-      shapes: `https://api.dicebear.com/7.x/shapes/svg?seed=${seed}&size=${sizePx}`,
-      thumbs: `https://api.dicebear.com/7.x/thumbs/svg?seed=${seed}&size=${sizePx}`
-    };
-
-    return styles[avatarStyle] || styles.avataaars;
+    return `https://api.dicebear.com/7.x/micah/svg?seed=${seed}&size=${sizePx}`;
   };
 
-  // Выбираем стиль аватара на основе имени пользователя для разнообразия
-  const getAvatarStyle = (name) => {
-    const styles = [
-      "avataaars",
-      "bottts",
-      "pixel",
-      "identicon",
-      "initials",
-      "lorelei",
-      "micah",
-      "miniavs",
-      "bigEars",
-      "bigSmile",
-      "croodles",
-      "funEmoji",
-      "notionists",
-      "shapes",
-      "thumbs"
-    ];
-    const index = name.charCodeAt(0) % styles.length;
-    return styles[index];
-  };
-
-  const selectedStyle = getAvatarStyle(user.name);
+  // Показываем avatarUrl, если оно есть, иначе fallback на DiceBear
+  const avatarSrc = user.avatarUrl
+    ? user.avatarUrl
+    : getAvatarUrl(user.name, size);
 
   return (
     <div className="d-flex align-items-center justify-content-center">
@@ -108,7 +68,7 @@ const Avatar = ({ user, size = "md", style = "avataaars" }) => {
         }}
       >
         <img
-          src={getAvatarUrl(user.name, size, selectedStyle)}
+          src={avatarSrc}
           alt={`Avatar of ${user.name}`}
           style={{
             width: "100%",
@@ -155,24 +115,7 @@ const Avatar = ({ user, size = "md", style = "avataaars" }) => {
 
 Avatar.propTypes = {
   user: PropTypes.object.isRequired,
-  size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
-  style: PropTypes.oneOf([
-    "avataaars",
-    "bottts",
-    "pixel",
-    "identicon",
-    "initials",
-    "lorelei",
-    "micah",
-    "miniavs",
-    "bigEars",
-    "bigSmile",
-    "croodles",
-    "funEmoji",
-    "notionists",
-    "shapes",
-    "thumbs"
-  ])
+  size: PropTypes.oneOf(["sm", "md", "lg", "xl"])
 };
 
 export default Avatar;
