@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import BookMark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
+import Avatar from "./avatar";
 import { Link } from "react-router-dom";
 
 const UsersTable = ({
@@ -13,6 +14,10 @@ const UsersTable = ({
   onDelete
 }) => {
   const columns = {
+    avatar: {
+      name: "Аватар",
+      component: (user) => <Avatar user={user} size="md" />
+    },
     name: {
       path: "name",
       name: "Имя",

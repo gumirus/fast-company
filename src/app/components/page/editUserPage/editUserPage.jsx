@@ -6,6 +6,7 @@ import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
+import Avatar from "../../ui/avatar";
 
 const EditUserPage = () => {
   const { userId } = useParams();
@@ -130,6 +131,13 @@ const EditUserPage = () => {
         <div className="col-md-6 offset-md-3 shadow p-4">
           {!isLoading && Object.keys(professions).length > 0 ? (
             <form onSubmit={handleSubmit}>
+              <div className="d-flex align-items-center mb-4">
+                <Avatar user={data} size="lg" />
+                <div className="ms-3">
+                  <h4 className="mb-0">Редактирование профиля</h4>
+                  <p className="text-muted mb-0">{data.email}</p>
+                </div>
+              </div>
               <TextField
                 label="Имя"
                 name="name"
