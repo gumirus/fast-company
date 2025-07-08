@@ -124,7 +124,7 @@ const LoginForm = () => {
           disabled={!isValid}
           className="btn btn-primary w-100 mx-auto"
         >
-          Отправить
+          Войти
         </button>
       </form>
       <p className="mt-3 text-center">
