@@ -338,3 +338,45 @@ h6 {
     margin-left: 0;
   }
 }
+
+.prof-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.prof-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+.prof-overlay-content {
+  position: relative;
+  margin-top: 10vh;
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 90vw;
+  max-width: 500px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (min-width: 992px) {
+  .prof-overlay,
+  .prof-overlay-backdrop,
+  .prof-overlay-content {
+    display: none !important;
+  }
+}
