@@ -17,7 +17,10 @@ const EditUserPage = () => {
     email: "",
     profession: "",
     sex: "male",
-    qualities: []
+    qualities: [],
+    avatarUrl: "",
+    rate: 0,
+    completedMeetings: 0
   });
   const [professions, setProfession] = useState([]);
   const [qualities, setQualities] = useState([]);
@@ -72,7 +75,9 @@ const EditUserPage = () => {
         ...prevState,
         ...data,
         qualities: transformData(qualities),
-        profession: profession._id
+        profession: profession._id,
+        rate: data.rate || 0,
+        completedMeetings: data.completedMeetings || 0
       }))
     );
     api.professions.fetchAll().then((data) => {
@@ -151,6 +156,29 @@ const EditUserPage = () => {
                 value={data.email}
                 onChange={handleChange}
                 error={errors.email}
+              />
+              <TextField
+                label="URL аватара"
+                name="avatarUrl"
+                value={data.avatarUrl}
+                onChange={handleChange}
+                error={errors.avatarUrl}
+              />
+              <TextField
+                label="Рейтинг"
+                name="rate"
+                type="number"
+                value={data.rate}
+                onChange={handleChange}
+                error={errors.rate}
+              />
+              <TextField
+                label="Количество встреч"
+                name="completedMeetings"
+                type="number"
+                value={data.completedMeetings}
+                onChange={handleChange}
+                error={errors.completedMeetings}
               />
               <SelectField
                 label="Выбери свою профессию"

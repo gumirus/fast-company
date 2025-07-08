@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const NavBar = () => {
+  const { currentUser, logOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -47,16 +49,35 @@ const NavBar = () => {
                 Main
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink
-                className={({ isActive }) =>
-                  "nav-link" + (isActive ? " active" : "")
-                }
-                to="/login"
-              >
-                Login
-              </NavLink>
-            </li>
+            {currentUser ? (
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to={`/users/${currentUser._id}`}
+                  >
+                    {currentUser.name}
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" role="button" onClick={logOut}>
+                    Выйти
+                  </a>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <NavLink
+                  className={({ isActive }) =>
+                    "nav-link" + (isActive ? " active" : "")
+                  }
+                  to="/login"
+                >
+                  Login
+                </NavLink>
+              </li>
+            )}
+
             <li className="nav-item">
               <NavLink
                 className={({ isActive }) =>
