@@ -6,6 +6,12 @@ import Table from "../common/table";
 import Avatar from "./avatar";
 import { Link } from "react-router-dom";
 
+const getBadgeColor = (percent) => {
+  if (percent >= 70) return "bg-success";
+  if (percent >= 40) return "bg-warning text-dark";
+  return "bg-danger";
+};
+
 const UsersTable = ({
   users,
   onSort,
@@ -13,6 +19,11 @@ const UsersTable = ({
   onToggleBookMark,
   onDelete
 }) => {
+  // Вычисляем максимальные значения для процента
+  const maxRate = users.length > 0 ? Math.max(...users.map((u) => u.rate)) : 5;
+  const maxMeetings =
+    users.length > 0 ? Math.max(...users.map((u) => u.completedMeetings)) : 1;
+
   const columns = {
     avatar: {
       name: "Аватар",
@@ -28,8 +39,30 @@ const UsersTable = ({
       component: (user) => <Qualities qualities={user.qualities} />
     },
     professions: { path: "profession.name", name: "Профессия" },
-    completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
-    rate: { path: "rate", name: "Оценка" },
+    completedMeetings: {
+      path: "completedMeetings",
+      name: "Встретился, раз",
+      component: (user) => {
+        const percent = maxMeetings
+          ? Math.round((user.completedMeetings / maxMeetings) * 100)
+          : 0;
+        return (
+          <span className={`badge ${getBadgeColor(percent)}`}>
+            {user.completedMeetings}
+          </span>
+        );
+      }
+    },
+    rate: {
+      path: "rate",
+      name: "Оценка",
+      component: (user) => {
+        const percent = maxRate ? Math.round((user.rate / maxRate) * 100) : 0;
+        return (
+          <span className={`badge ${getBadgeColor(percent)}`}>{user.rate}</span>
+        );
+      }
+    },
     bookmark: {
       path: "bookmark",
       name: "Избранное",

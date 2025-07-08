@@ -1,14 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 const NavBar = () => {
   const { currentUser, logOut } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setOpen((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4 shadow-sm">
@@ -31,64 +44,79 @@ const NavBar = () => {
             Fast Company
           </span>
         </Link>
-        <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div
-          className={"collapse navbar-collapse" + (isMenuOpen ? " show" : "")}
-        >
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <NavLink
-                className={({ isActive }) =>
-                  "nav-link" + (isActive ? " active" : "")
-                }
-                end
-                to="/"
-              >
-                Main
+
+        {/* Desktop Links */}
+        <div className="d-none d-lg-flex navbar-nav">
+          <NavLink className="nav-link" end to="/">
+            Main
+          </NavLink>
+          {currentUser ? (
+            <>
+              <NavLink className="nav-link" to={`/users/${currentUser._id}`}>
+                {currentUser.name}
               </NavLink>
-            </li>
-            {currentUser ? (
-              <>
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    to={`/users/${currentUser._id}`}
-                  >
-                    {currentUser.name}
+              <a className="nav-link" role="button" onClick={logOut}>
+                Выйти
+              </a>
+            </>
+          ) : (
+            <NavLink className="nav-link" to="/login">
+              Login
+            </NavLink>
+          )}
+          <NavLink className="nav-link" to="/users">
+            Пользователи
+          </NavLink>
+        </div>
+
+        {/* Mobile Dropdown */}
+        <div className="d-lg-none" ref={menuRef}>
+          <button className="navbar-toggler" type="button" onClick={toggleMenu}>
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          {isOpen && (
+            <div className="custom-dropdown-menu">
+              <ul className="list-unstyled mb-0">
+                <li>
+                  <NavLink className="dropdown-item" end to="/">
+                    Main
                   </NavLink>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" role="button" onClick={logOut}>
-                    Выйти
-                  </a>
+                {currentUser ? (
+                  <>
+                    <li>
+                      <NavLink
+                        className="dropdown-item"
+                        to={`/users/${currentUser._id}`}
+                      >
+                        {currentUser.name}
+                      </NavLink>
+                    </li>
+                    <li>
+                      <a
+                        className="dropdown-item"
+                        role="button"
+                        onClick={logOut}
+                      >
+                        Выйти
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li>
+                    <NavLink className="dropdown-item" to="/login">
+                      Login
+                    </NavLink>
+                  </li>
+                )}
+                <li>
+                  <NavLink className="dropdown-item" to="/users">
+                    Пользователи
+                  </NavLink>
                 </li>
-              </>
-            ) : (
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    "nav-link" + (isActive ? " active" : "")
-                  }
-                  to="/login"
-                >
-                  Login
-                </NavLink>
-              </li>
-            )}
-
-            <li className="nav-item">
-              <NavLink
-                className={({ isActive }) =>
-                  "nav-link" + (isActive ? " active" : "")
-                }
-                to="/users"
-              >
-                Users
-              </NavLink>
-            </li>
-          </ul>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </nav>

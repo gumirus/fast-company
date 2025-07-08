@@ -9,7 +9,8 @@ const Main = () => {
     totalProfessions: 0,
     totalQualities: 0,
     topRatedUser: null,
-    recentUsers: []
+    recentUsers: [],
+    maxRate: 5
   });
 
   useEffect(() => {
@@ -23,13 +24,16 @@ const Main = () => {
 
         const topRated = users.sort((a, b) => b.rate - a.rate)[0];
         const recent = users.slice(0, 3);
+        const maxRate =
+          users.length > 0 ? Math.max(...users.map((u) => u.rate)) : 5;
 
         setStats({
           totalUsers: users.length,
           totalProfessions: Object.keys(professions).length,
           totalQualities: Object.keys(qualities).length,
           topRatedUser: topRated,
-          recentUsers: recent
+          recentUsers: recent,
+          maxRate
         });
       } catch (error) {
         console.error("Error fetching stats:", error);
@@ -38,6 +42,17 @@ const Main = () => {
 
     fetchStats();
   }, []);
+
+  // Функция для процента и цвета бейджа
+  const getRatingInfo = (rate) => {
+    const percent = stats.maxRate
+      ? Math.round((rate / stats.maxRate) * 100)
+      : 0;
+    let color = "bg-danger";
+    if (percent >= 70) color = "bg-success";
+    else if (percent >= 40) color = "bg-warning text-dark";
+    return { percent, color };
+  };
 
   return (
     <div className="container mt-5">
@@ -129,8 +144,13 @@ const Main = () => {
                       {stats.topRatedUser.profession.name}
                     </p>
                     <div className="d-flex align-items-center">
-                      <span className="badge bg-warning text-dark me-2">
-                        Рейтинг: {stats.topRatedUser.rate}
+                      <span
+                        className={`badge ${
+                          getRatingInfo(stats.topRatedUser.rate).color
+                        } me-2`}
+                      >
+                        Рейтинг:{" "}
+                        {getRatingInfo(stats.topRatedUser.rate).percent}%
                       </span>
                       <span className="badge bg-info">
                         Встреч: {stats.topRatedUser.completedMeetings}
@@ -163,10 +183,12 @@ const Main = () => {
                           </small>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-between">
-                        <small className="text-muted">
-                          Рейтинг: {user.rate}
-                        </small>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span
+                          className={`badge ${getRatingInfo(user.rate).color}`}
+                        >
+                          Рейтинг: {getRatingInfo(user.rate).percent}%
+                        </span>
                         <Link
                           to={`/users/${user._id}`}
                           className="btn btn-sm btn-outline-primary"

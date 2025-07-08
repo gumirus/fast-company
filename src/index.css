@@ -215,6 +215,58 @@ h6 {
   }
 }
 
+/* Стили для кастомного выпадающего меню */
+.custom-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  padding: 1.2rem 0.5rem 1.2rem 0.5rem; /* Больше вертикальных отступов */
+  min-width: 180px;
+  max-width: 220px;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-dropdown-menu ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.5rem;
+  clear: both;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 0.5rem;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item.active {
+  background-color: #f3f4f6;
+  color: #fbbf24;
+}
+
 /* Современный плавный переход */
 * {
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;

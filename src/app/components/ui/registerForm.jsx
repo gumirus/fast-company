@@ -221,7 +221,7 @@ const RegisterForm = () => {
           disabled={!isValid}
           className="btn btn-primary w-100 mx-auto"
         >
-          Submit
+          Зарегистрироваться
         </button>
       </form>
       <p className="mt-3 text-center">
