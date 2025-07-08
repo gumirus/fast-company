@@ -11,9 +11,9 @@ const GroupList = ({
   if (!Array.isArray(items)) {
     return (
       <ul className="list-group">
-        {Object.keys(items).map((item) => (
+        {Object.keys(items).map((item, index) => (
           <li
-            key={items[item][valueProperty]}
+            key={`${items[item][valueProperty]}-${index}`}
             className={
               "list-group-item" +
               (items[item] === selectedItem ? " active" : "")
@@ -29,9 +29,9 @@ const GroupList = ({
   }
   return (
     <ul className="list-group">
-      {items.map((item) => (
+      {items.map((item, index) => (
         <li
-          key={item[valueProperty]}
+          key={`${item[valueProperty]}-${index}`}
           className={
             "list-group-item" + (item === selectedItem ? " active" : "")
           }

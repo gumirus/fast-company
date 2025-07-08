@@ -34,7 +34,10 @@ const UsersListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    api.professions.fetchAll().then((data) => setProfession(data));
+    api.professions.fetchAll().then((data) => {
+      console.log("Professions loaded:", data);
+      setProfession(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -77,22 +80,36 @@ const UsersListPage = () => {
     return (
       <div className="container mt-5">
         <div className="d-flex">
-          {professions && (
-            <div className="d-flex flex-column flex-shrink-0 p-3">
-              <GroupList
-                selectedItem={selectedProf}
-                items={professions}
-                onItemSelect={handleProfessionSelect}
-              />
-              <button
-                className="btn btn-outline-secondary mt-2"
-                onClick={clearFilter}
-              >
-                Очистить
-              </button>
-            </div>
-          )}
-          <div className="d-flex flex-column">
+          <div
+            className="d-flex flex-column flex-shrink-0 p-3"
+            style={{ minWidth: "200px" }}
+          >
+            {professions ? (
+              <>
+                <h5>Профессии:</h5>
+                <GroupList
+                  selectedItem={selectedProf}
+                  items={
+                    Array.isArray(professions)
+                      ? professions
+                      : Object.values(professions)
+                  }
+                  onItemSelect={handleProfessionSelect}
+                  valueProperty="_id"
+                  contentProperty="name"
+                />
+                <button
+                  className="btn btn-outline-secondary mt-2"
+                  onClick={clearFilter}
+                >
+                  Очистить
+                </button>
+              </>
+            ) : (
+              <div>Загрузка профессий...</div>
+            )}
+          </div>
+          <div className="d-flex flex-column flex-grow-1">
             <SearchStatus length={count} />
             <input
               type="text"
@@ -100,6 +117,7 @@ const UsersListPage = () => {
               placeholder="Search..."
               onChange={handleSearchQuery}
               value={searchQuery}
+              className="form-control mb-3"
             />
             {count > 0 && (
               <UsersTable

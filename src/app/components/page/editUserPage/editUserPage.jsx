@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import api from "../../../api";
 import TextField from "../../common/form/textField";
@@ -9,7 +9,7 @@ import MultiSelectField from "../../common/form/multiSelectField";
 
 const EditUserPage = () => {
   const { userId } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -54,7 +54,7 @@ const EditUserPage = () => {
         profession: getProfessionById(profession),
         qualities: getQualities(qualities)
       })
-      .then((data) => history.push(`/users/${data._id}`));
+      .then((data) => navigate(`/users/${data._id}`));
     console.log({
       ...data,
       profession: getProfessionById(profession),
