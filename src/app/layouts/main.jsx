@@ -143,7 +143,12 @@ const Main = () => {
               </h5>
               <h2 className="card-text">{stats.totalProfessions}</h2>
               <p className="text-muted">Доступных профессий</p>
-              <p className="text-muted">(нажмите, чтобы посмотреть)</p>
+              <button
+                className="btn btn-outline-success mt-2"
+                onClick={() => setShowProfModal(true)}
+              >
+                Посмотреть профессии
+              </button>
             </div>
           </div>
         </div>
@@ -450,7 +455,7 @@ const Main = () => {
                           </small>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex justify-content-between align-items-center gap-2">
                         <span
                           className={`badge ${getRatingInfo(user.rate).color}`}
                         >
